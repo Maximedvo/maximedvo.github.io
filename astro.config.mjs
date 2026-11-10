@@ -2,8 +2,12 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
+// Adresse publique du site. Sur GitHub, elle est fournie automatiquement par le déploiement
+// (https://maximedvo.github.io aujourd'hui, https://flashup-pro.be une fois le domaine branché).
+const SITE_URL = process.env.SITE_URL || 'https://maximedvo.github.io';
+
 export default defineConfig({
-  site: 'https://flashup-pro.be',
+  site: SITE_URL,
   trailingSlash: 'ignore',
   build: {
     format: 'directory',
@@ -26,11 +30,11 @@ export default defineConfig({
       directives: [
         "default-src 'self'",
         "img-src 'self' data: blob: https://*.googleusercontent.com https://www.googletagmanager.com https://*.google-analytics.com",
-        "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com",
+        "connect-src 'self' https://formsubmit.co https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com",
         "font-src 'self'",
         "object-src 'none'",
         "base-uri 'self'",
-        "form-action 'self'",
+        "form-action 'self' https://formsubmit.co",
       ],
       scriptDirective: {
         resources: ["'self'", 'https://www.googletagmanager.com'],

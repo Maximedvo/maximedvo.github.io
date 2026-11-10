@@ -1,6 +1,6 @@
 /**
  * Synchronisation automatique des avis Google (optionnelle).
- * Interroge /api/avis-google (fonction Netlify). En cas d'échec,
+ * Interroge /api/avis-google (fonction serveur optionnelle, absente sur GitHub Pages). En cas d'échec,
  * les avis saisis dans l'administration restent affichés.
  */
 type LiveReview = {

@@ -1,7 +1,7 @@
 /**
  * Formulaire de devis : validation en français, envoi sans rechargement
- * (Netlify Forms), confirmation claire et gestion des erreurs.
- * Sans JavaScript, le formulaire fonctionne aussi (page /contact/merci/).
+ * (FormSubmit, réponse JSON), confirmation claire et gestion des erreurs.
+ * Sans JavaScript, le formulaire fonctionne aussi (redirection vers /contact/merci/).
  */
 const MIN_FILL_MS = 2500; // envoi trop rapide = robot probable
 
@@ -37,16 +37,17 @@ function showError(input: HTMLInputElement | HTMLSelectElement | HTMLTextAreaEle
   input.setAttribute('aria-describedby', `${input.getAttribute('aria-describedby') || ''} ${p.id}`.trim());
 }
 
-function encode(form: HTMLFormElement) {
+function toPayload(form: HTMLFormElement) {
   // regroupe les choix multiples (ex. « prestations ») en une seule valeur lisible
   const grouped = new Map<string, string[]>();
   new FormData(form).forEach((value, key) => {
-    if (typeof value !== 'string') return;
+    if (typeof value !== 'string' || key === '_next') return;
     grouped.set(key, [...(grouped.get(key) ?? []), value]);
   });
-  const params = new URLSearchParams();
-  grouped.forEach((values, key) => params.append(key, values.filter(Boolean).join(', ')));
-  return params.toString();
+  const data: Record<string, string> = {};
+  grouped.forEach((values, key) => (data[key] = values.filter(Boolean).join(', ')));
+  if (data.email) data._replyto = data.email;
+  return JSON.stringify(data);
 }
 
 export function initContactForms() {
@@ -73,7 +74,7 @@ export function initContactForms() {
     }
 
     const controls = Array.from(form.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>('input, select, textarea')).filter(
-      (c) => c.type !== 'hidden' && c.type !== 'checkbox' && c.name !== 'adresse-web',
+      (c) => c.type !== 'hidden' && c.type !== 'checkbox' && c.name !== '_honey',
     );
     controls.forEach((c) => {
       c.addEventListener('blur', () => {
@@ -110,7 +111,7 @@ export function initContactForms() {
         return;
       }
 
-      const honeypot = form.querySelector<HTMLInputElement>('[name="adresse-web"]');
+      const honeypot = form.querySelector<HTMLInputElement>('[name="_honey"]');
       if (honeypot?.value || Date.now() - startedAt < MIN_FILL_MS) {
         // probable robot : on simule un succès sans rien envoyer
         form.hidden = true;
@@ -120,12 +121,13 @@ export function initContactForms() {
 
       setLoading(true);
       try {
-        const res = await fetch('/', {
+        const res = await fetch(form.dataset.endpoint || form.action, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: encode(form),
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: toPayload(form),
         });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const result = (await res.json().catch(() => ({}))) as { success?: string | boolean };
+        if (!res.ok || String(result.success) !== 'true') throw new Error(`Envoi refusé (${res.status})`);
         form.hidden = true;
         success.hidden = false;
         success.focus();

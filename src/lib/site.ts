@@ -16,7 +16,7 @@ export const site = {
   firstName: text(raw.prenom),
   portrait: text(raw.photoPortrait),
   experience: text(raw.experience) || '1 an',
-  url: 'https://flashup-pro.be',
+  url: (import.meta.env.SITE || 'https://maximedvo.github.io').replace(/\/$/, ''),
   phone: text(raw.telephone),
   phoneHref: `tel:${text(raw.telephoneInternational)}`,
   email: text(raw.email),

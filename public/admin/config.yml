@@ -1,11 +1,12 @@
 # =============================================================================
-#  Administration du site FlashUp (Decap CMS) — accessible sur /admin/
-#  Chaque enregistrement publie automatiquement le site (environ 1 minute).
+#  Administration du site FlashUp (Sveltia CMS) — accessible sur /admin/
+#  Connexion : « Sign In Using Access Token » avec un jeton GitHub (voir GUIDE.md).
+#  Chaque enregistrement publie automatiquement le site (1 à 2 minutes).
 # =============================================================================
 
 backend:
   name: github
-  repo: Maximedvo/FlashUp-pro # compte/dépôt GitHub du site
+  repo: Maximedvo/maximedvo.github.io # compte/dépôt GitHub du site
   branch: main
   commit_messages:
     create: "Ajout {{collection}} « {{slug}} »"
@@ -14,13 +15,23 @@ backend:
     uploadMedia: "Ajout image {{path}}"
     deleteMedia: "Suppression image {{path}}"
 
-# Test en local uniquement (npm run cms + npm run dev, puis http://localhost:4321/admin/)
-local_backend: true
+site_url: https://maximedvo.github.io
+display_url: https://maximedvo.github.io
+logo:
+  src: /icon-192.png
 
-locale: fr
-site_url: https://flashup-pro.be
-display_url: https://flashup-pro.be
-logo_url: /icon-192.png
+# Les photos sont réduites (2000 px max) et converties en WebP avant l'envoi :
+# envoi plus rapide depuis le téléphone, site plus léger.
+media_libraries:
+  default:
+    config:
+      max_file_size: 25000000
+      transformations:
+        raster_image:
+          format: webp
+          quality: 85
+          width: 2000
+          height: 2000
 
 # Images générales (portrait, offres)
 media_folder: src/assets/uploads/site
@@ -201,7 +212,6 @@ collections:
   # ---------------------------------------------------------------------------
   - name: parametres
     label: Paramètres du site
-    delete: false
     editor: { preview: false }
     files:
       - name: site
@@ -231,7 +241,6 @@ collections:
               - { label: "Lien « Laisser un avis » (facultatif)", name: "lienLaisserAvis", widget: "string", required: false }
               - { label: "Note moyenne Google (ex. 4,9)", name: "note", widget: "string", required: false, hint: "Recopiez la note exacte affichée sur votre fiche Google." }
               - { label: "Nombre d'avis Google", name: "nombreAvis", widget: "string", required: false }
-              - { label: "Synchronisation automatique des avis Google", name: "synchronisationAutomatique", widget: "boolean", default: false, hint: "Nécessite la clé API Google configurée dans Netlify (voir GUIDE.md)." }
           - label: "Statistiques & référencement"
             name: "analytics"
             widget: "object"

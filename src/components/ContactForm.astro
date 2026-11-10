@@ -1,9 +1,9 @@
 ---
 /**
- * Formulaire de demande de devis — Netlify Forms.
- * Les demandes sont enregistrées dans Netlify et envoyées par e-mail
- * (notification à configurer une fois dans Netlify, voir GUIDE.md).
- * Anti-spam : champ piège (honeypot) + filtre anti-spam Netlify.
+ * Formulaire de demande de devis — envoyé par e-mail via FormSubmit (formsubmit.co),
+ * sans compte ni serveur. La toute première demande déclenche un e-mail « Activate Form »
+ * à confirmer une seule fois (voir GUIDE.md).
+ * Anti-spam : champ piège (_honey), délai minimal de remplissage, validation des champs.
  */
 import Icon from './Icon.astro';
 import BrandIcon from './BrandIcon.astro';
@@ -11,6 +11,8 @@ import { site } from '../lib/site';
 
 interface Props { id?: string; }
 const { id = 'devis' } = Astro.props;
+const endpoint = `https://formsubmit.co/${site.email}`;
+const ajaxEndpoint = `https://formsubmit.co/ajax/${site.email}`;
 
 const BUSINESS_TYPES = [
   { key: 'marchand-vo', label: 'Marchand VO' },
@@ -39,16 +41,18 @@ const FREQUENCIES = ['Ponctuelle', 'Hebdomadaire', 'Plusieurs fois par semaine',
     id={id}
     name="devis"
     method="POST"
-    action="/contact/merci/"
-    data-netlify="true"
-    netlify-honeypot="adresse-web"
+    action={endpoint}
     class="form"
     data-contact-form
+    data-endpoint={ajaxEndpoint}
   >
-    <input type="hidden" name="form-name" value="devis" />
+    <input type="hidden" name="_subject" value="Nouvelle demande de devis — site FlashUp" />
+    <input type="hidden" name="_template" value="table" />
+    <input type="hidden" name="_captcha" value="false" />
+    <input type="hidden" name="_next" value={`${site.url}/contact/merci/`} />
     <input type="hidden" name="page" value="" data-page-field />
     <p class="hp-field" aria-hidden="true">
-      <label>Ne pas remplir ce champ <input name="adresse-web" tabindex="-1" autocomplete="off" /></label>
+      <label>Ne pas remplir ce champ <input type="text" name="_honey" tabindex="-1" autocomplete="off" /></label>
     </p>
 
     <fieldset>

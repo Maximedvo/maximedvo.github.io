@@ -6,10 +6,11 @@ Guide utilisateur (mise en ligne, administration, Google) : **[GUIDE.md](GUIDE.m
 ## Stack
 
 - **Astro 7** (site statique, zéro framework client, ~13 Ko de JavaScript au total)
-- **Decap CMS** (`/admin/`) — contenus en JSON versionnés dans Git
-- **Netlify** — hébergement, formulaires (Netlify Forms), fonction serverless pour les avis Google
+- **Sveltia CMS** (`/admin/`) — contenus en JSON versionnés dans Git, connexion par jeton GitHub
+- **GitHub Pages** — hébergement gratuit, publication automatique (`.github/workflows/deploy.yml`)
+- **FormSubmit** — envoi du formulaire de devis par e-mail, sans compte
 - Police **Archivo** auto-hébergée (aucun appel à Google Fonts), icônes **Lucide** / **Simple Icons** intégrées à la compilation
-- CSP stricte générée par Astro (`security.csp`), en-têtes de sécurité dans `netlify.toml`
+- CSP stricte générée par Astro (`security.csp`)
 
 ## Structure
 
@@ -25,8 +26,8 @@ src/
   pages/              Pages ; solutions/[slug].astro génère une page par offre
   scripts/            JS client (comparateur, visionneuse, formulaire, consentement, avis)
   styles/global.css   Design system (couleurs, typo, composants)
-public/admin/         Decap CMS (index.html + config.yml)
-netlify/functions/    avis-google.mjs (Google Places API, clé côté serveur)
+public/admin/         Sveltia CMS (index.html + config.yml)
+.github/workflows/    deploy.yml (compilation + publication sur GitHub Pages)
 ```
 
 ## Règles de contenu
