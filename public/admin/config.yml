@@ -1,0 +1,250 @@
+# =============================================================================
+#  Administration du site FlashUp (Decap CMS) — accessible sur /admin/
+#  Chaque enregistrement publie automatiquement le site (environ 1 minute).
+# =============================================================================
+
+backend:
+  name: github
+  repo: Maximedvo/FlashUp-pro # compte/dépôt GitHub du site
+  branch: main
+  commit_messages:
+    create: "Ajout {{collection}} « {{slug}} »"
+    update: "Mise à jour {{collection}} « {{slug}} »"
+    delete: "Suppression {{collection}} « {{slug}} »"
+    uploadMedia: "Ajout image {{path}}"
+    deleteMedia: "Suppression image {{path}}"
+
+# Test en local uniquement (npm run cms + npm run dev, puis http://localhost:4321/admin/)
+local_backend: true
+
+locale: fr
+site_url: https://flashup-pro.be
+display_url: https://flashup-pro.be
+logo_url: /icon-192.png
+
+# Images générales (portrait, offres)
+media_folder: src/assets/uploads/site
+public_folder: /src/assets/uploads/site
+
+collections:
+  # ---------------------------------------------------------------------------
+  - name: realisations
+    label: Réalisations
+    label_singular: Réalisation
+    description: >-
+      Vos réalisations : une photo du résultat, avec ou sans photo « avant ». Conseil : format
+      paysage, et même cadrage avant et après (JPG, PNG ou WebP). Les photos sont optimisées automatiquement.
+    folder: src/content/realisations
+    create: true
+    delete: true
+    format: json
+    extension: json
+    slug: "{{year}}-{{month}}-{{slug}}"
+    identifier_field: titre
+    summary: "{{titre}} — {{categorie}}"
+    sortable_fields: ["date", "titre", "categorie"]
+    media_folder: /src/assets/uploads/realisations
+    public_folder: /src/assets/uploads/realisations
+    fields:
+      - { label: "Titre", name: "titre", widget: "string", hint: "Ex. : Rénovation complète d'un SUV familial" }
+      - label: "Type de prestation"
+        name: "categorie"
+        widget: "select"
+        options:
+          - { label: "Nettoyage intérieur", value: "nettoyage-interieur" }
+          - { label: "Nettoyage extérieur", value: "nettoyage-exterieur" }
+          - { label: "Rénovation intérieure", value: "renovation-interieure" }
+          - { label: "Rénovation de phares", value: "renovation-phares" }
+          - { label: "Rénovation esthétique complète", value: "renovation-complete" }
+          - { label: "Préparation avant revente", value: "preparation-revente" }
+      - { label: "Véhicule (facultatif)", name: "vehicule", widget: "string", required: false, hint: "Ex. : Volkswagen Golf 7" }
+      - { label: "Description courte", name: "description", widget: "text", required: false, hint: "1 à 2 phrases sur le travail réalisé." }
+      - { label: "Photo APRÈS (ou photo du résultat)", name: "apres", widget: "image", choose_url: false }
+      - { label: "Photo AVANT (facultatif)", name: "avant", widget: "image", required: false, choose_url: false, hint: "Si vous l'ajoutez, le site affiche un comparateur avant / après. Sinon, seule la photo du résultat est affichée." }
+      - label: "Photos supplémentaires (facultatif)"
+        name: "photos"
+        widget: "list"
+        required: false
+        field: { label: "Photo", name: "photo", widget: "image", choose_url: false }
+      - { label: "Mettre en avant sur la page d'accueil", name: "miseEnAvant", widget: "boolean", default: false }
+      - { label: "Date", name: "date", widget: "datetime", format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false, required: false }
+      - { label: "Publiée sur le site", name: "publie", widget: "boolean", default: true }
+
+  # ---------------------------------------------------------------------------
+  - name: avis
+    label: Avis clients
+    label_singular: Avis
+    description: >-
+      Copiez ici uniquement de VRAIS avis publiés sur votre fiche Google (nom affiché,
+      note, date et texte, sans modification). Ne créez jamais d'avis fictif.
+    folder: src/content/avis
+    create: true
+    delete: true
+    format: json
+    extension: json
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    identifier_field: auteur
+    summary: "{{auteur}} — {{note}}/5"
+    fields:
+      - { label: "Nom affiché sur Google", name: "auteur", widget: "string" }
+      - { label: "Note (sur 5)", name: "note", widget: "number", value_type: "int", min: 1, max: 5, default: 5 }
+      - { label: "Date de l'avis", name: "date", widget: "datetime", format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false }
+      - { label: "Texte de l'avis", name: "texte", widget: "text" }
+      - { label: "Lien vers l'avis (facultatif)", name: "lien", widget: "string", required: false }
+      - { label: "Source", name: "source", widget: "hidden", default: "Google" }
+      - { label: "Publié sur le site", name: "publie", widget: "boolean", default: true }
+
+  # ---------------------------------------------------------------------------
+  - name: offres
+    label: Offres professionnelles
+    label_singular: Offre
+    description: >-
+      Chaque offre crée automatiquement une page /solutions/… et une carte sur l'accueil.
+      Le nom du fichier (défini à la création) devient l'adresse de la page.
+    folder: src/content/offres
+    create: true
+    delete: true
+    format: json
+    extension: json
+    slug: "{{slug}}"
+    identifier_field: menu
+    summary: "{{ordre}}. {{cible}}"
+    sortable_fields: ["ordre", "cible"]
+    fields:
+      - { label: "Ordre d'affichage", name: "ordre", widget: "number", value_type: "int", default: 10 }
+      - { label: "Nom court (menu)", name: "menu", widget: "string", hint: "Ex. : Concessionnaires" }
+      - { label: "Cible (titre de la carte)", name: "cible", widget: "string" }
+      - { label: "Résumé (carte d'accueil)", name: "resumeCarte", widget: "text" }
+      - { label: "Surtitre de la page", name: "surtitre", widget: "string" }
+      - { label: "Titre de la page (H1)", name: "titre", widget: "string" }
+      - { label: "Introduction", name: "introduction", widget: "text" }
+      - { label: "Photo (facultatif)", name: "image", widget: "image", required: false, choose_url: false }
+      - &icone
+        label: "Icône"
+        name: "icone"
+        widget: "select"
+        default: "check"
+        options:
+          - { label: "Voiture", value: "car-front" }
+          - { label: "Clé", value: "key-round" }
+          - { label: "Bâtiment / concession", value: "building-2" }
+          - { label: "Camionnette", value: "truck" }
+          - { label: "Horloge (gain de temps)", value: "clock" }
+          - { label: "Étincelles (finition)", value: "sparkles" }
+          - { label: "Médaille (qualité)", value: "award" }
+          - { label: "Calendrier validé", value: "calendar-check" }
+          - { label: "Calendrier / horaires", value: "calendar-clock" }
+          - { label: "Répétition (régulier)", value: "repeat" }
+          - { label: "Itinéraire (flexibilité)", value: "route" }
+          - { label: "Poignée de main", value: "handshake" }
+          - { label: "Euro (tarifs)", value: "euro" }
+          - { label: "Facture", value: "receipt" }
+          - { label: "Personne validée", value: "user-check" }
+          - { label: "Clé à molette (matériel)", value: "wrench" }
+          - { label: "Bouclier (fiabilité)", value: "shield-check" }
+          - { label: "Badge validé", value: "badge-check" }
+          - { label: "Gouttes (lavage)", value: "droplets" }
+          - { label: "Pulvérisateur (rénovation)", value: "spray-can" }
+          - { label: "Ampoule (phares)", value: "lightbulb" }
+          - { label: "Siège (intérieur)", value: "armchair" }
+          - { label: "Coche", value: "check" }
+      - { label: "Titre de la section prestations", name: "prestationsTitre", widget: "string", default: "Mes prestations" }
+      - label: "Prestations"
+        name: "prestations"
+        widget: "list"
+        summary: "{{fields.titre}}"
+        fields:
+          - { label: "Titre", name: "titre", widget: "string" }
+          - { label: "Description", name: "description", widget: "text", required: false }
+          - label: "Éléments inclus (facultatif)"
+            name: "elements"
+            widget: "list"
+            required: false
+            field: { label: "Élément", name: "element", widget: "string" }
+      - { label: "Titre de la section avantages", name: "avantagesTitre", widget: "string", default: "Pourquoi travailler avec FlashUp" }
+      - label: "Avantages"
+        name: "avantages"
+        widget: "list"
+        summary: "{{fields.titre}}"
+        fields:
+          - { label: "Titre", name: "titre", widget: "string" }
+          - { label: "Texte", name: "texte", widget: "text", required: false }
+          - *icone
+      - { label: "Texte du bouton principal", name: "cta", widget: "string", hint: "Ex. : Demander un tarif professionnel" }
+      - label: "Type d'entreprise présélectionné dans le formulaire"
+        name: "typeEntreprise"
+        widget: "select"
+        required: false
+        options:
+          - { label: "Marchand VO", value: "marchand-vo" }
+          - { label: "Garage indépendant", value: "garage-independant" }
+          - { label: "Concessionnaire", value: "concessionnaire" }
+          - { label: "Société de location", value: "societe-location" }
+          - { label: "Gestionnaire de flotte", value: "gestionnaire-flotte" }
+          - { label: "Autre", value: "autre" }
+      - label: "Catégories de réalisations à afficher"
+        name: "categoriesRealisations"
+        widget: "select"
+        multiple: true
+        required: false
+        options:
+          - { label: "Nettoyage intérieur", value: "nettoyage-interieur" }
+          - { label: "Nettoyage extérieur", value: "nettoyage-exterieur" }
+          - { label: "Rénovation intérieure", value: "renovation-interieure" }
+          - { label: "Rénovation de phares", value: "renovation-phares" }
+          - { label: "Rénovation esthétique complète", value: "renovation-complete" }
+          - { label: "Préparation avant revente", value: "preparation-revente" }
+      - { label: "Titre SEO (onglet Google, ~60 caractères)", name: "seoTitre", widget: "string" }
+      - { label: "Description SEO (~155 caractères)", name: "seoDescription", widget: "text" }
+      - { label: "Publiée sur le site", name: "publie", widget: "boolean", default: true }
+
+  # ---------------------------------------------------------------------------
+  - name: parametres
+    label: Paramètres du site
+    delete: false
+    editor: { preview: false }
+    files:
+      - name: site
+        label: Coordonnées, Google, statistiques & mentions légales
+        file: src/data/site.json
+        fields:
+          - { label: "Nom", name: "nom", widget: "string" }
+          - { label: "Slogan", name: "slogan", widget: "string" }
+          - { label: "Votre prénom", name: "prenom", widget: "string", required: false, hint: "Affiché sur l'accueil : « Moi, c'est … »" }
+          - { label: "Votre photo (portrait)", name: "photoPortrait", widget: "image", required: false, choose_url: false, hint: "Photo de vous, format vertical de préférence, visage bien visible." }
+          - { label: "Ancienneté de l'activité", name: "experience", widget: "string", default: "1 an", hint: "Ex. : 1 an, 2 ans… (affiché « depuis 1 an »)" }
+          - { label: "Téléphone (affiché)", name: "telephone", widget: "string" }
+          - { label: "Téléphone (format international)", name: "telephoneInternational", widget: "string", hint: "Ex. : +32490468916" }
+          - { label: "E-mail", name: "email", widget: "string" }
+          - { label: "WhatsApp (numéro sans + ni espaces)", name: "whatsapp", widget: "string", hint: "Ex. : 32490468916" }
+          - { label: "Message WhatsApp pré-rempli", name: "whatsappMessage", widget: "text" }
+          - { label: "Compte Instagram (sans @)", name: "instagram", widget: "string" }
+          - { label: "Ville", name: "ville", widget: "string" }
+          - { label: "Zone d'intervention", name: "zone", widget: "string" }
+          - { label: "Communes desservies", name: "communes", widget: "list", field: { label: "Commune", name: "commune", widget: "string" } }
+          - { label: "Afficher les emplacements provisoires", name: "afficherEmplacementsProvisoires", widget: "boolean", default: true, hint: "Désactivez avant la mise en ligne publique si certaines photos ou informations manquent encore." }
+          - label: "Google"
+            name: "google"
+            widget: "object"
+            fields:
+              - { label: "Lien « Consulter nos avis Google »", name: "lienAvis", widget: "string" }
+              - { label: "Lien « Laisser un avis » (facultatif)", name: "lienLaisserAvis", widget: "string", required: false }
+              - { label: "Note moyenne Google (ex. 4,9)", name: "note", widget: "string", required: false, hint: "Recopiez la note exacte affichée sur votre fiche Google." }
+              - { label: "Nombre d'avis Google", name: "nombreAvis", widget: "string", required: false }
+              - { label: "Synchronisation automatique des avis Google", name: "synchronisationAutomatique", widget: "boolean", default: false, hint: "Nécessite la clé API Google configurée dans Netlify (voir GUIDE.md)." }
+          - label: "Statistiques & référencement"
+            name: "analytics"
+            widget: "object"
+            fields:
+              - { label: "Identifiant Google Analytics 4 (G-XXXXXXX)", name: "ga4", widget: "string", required: false }
+              - { label: "Code de vérification Google Search Console", name: "searchConsole", widget: "string", required: false }
+          - label: "Mentions légales"
+            name: "legal"
+            widget: "object"
+            fields:
+              - { label: "Dénomination / nom légal", name: "denomination", widget: "string", required: false }
+              - { label: "Forme juridique", name: "formeJuridique", widget: "string", required: false }
+              - { label: "Responsable de la publication", name: "responsable", widget: "string", required: false }
+              - { label: "Adresse d'établissement", name: "adresse", widget: "string", required: false }
+              - { label: "Numéro d'entreprise (BCE)", name: "bce", widget: "string", required: false }
+              - { label: "Numéro de TVA", name: "tva", widget: "string", required: false }

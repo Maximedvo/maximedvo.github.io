@@ -1,0 +1,27 @@
+{
+  "name": "flashup-pro",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Site professionnel FlashUp — préparation esthétique automobile B2B, Liège",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "cms": "decap-server"
+  },
+  "engines": {
+    "node": ">=22.23.4"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "@fontsource-variable/archivo": "^5.3.0",
+    "astro": "^7.4.7",
+    "sharp": "^0.35.5"
+  },
+  "devDependencies": {
+    "decap-server": "^3.11.6",
+    "lucide-static": "^1.70.0",
+    "simple-icons": "^16.37.0"
+  }
+}

@@ -1,0 +1,155 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import RealisationCard from '../components/RealisationCard.astro';
+import RealisationLightbox from '../components/RealisationLightbox.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import { CATEGORIES, CATEGORY_KEYS } from '../lib/categories';
+import { getRealisations, placeholderFor } from '../lib/realisations';
+import { site } from '../lib/site';
+
+const real = await getRealisations();
+const items = [...real];
+if (site.showPlaceholders) {
+  for (const cat of CATEGORY_KEYS) {
+    if (!real.some((r) => r.categorie === cat)) items.push(placeholderFor(cat));
+  }
+}
+const countFor = (cat: string) => real.filter((r) => r.categorie === cat).length;
+---
+<BaseLayout
+  title="Réalisations avant / après — Detailing à Liège | FlashUp"
+  description="Portfolio FlashUp : nettoyage intérieur et extérieur, rénovation de phares, rénovation esthétique, préparation avant revente. Comparez avant / après."
+  breadcrumbs={[{ name: 'Réalisations', path: '/realisations/' }]}
+>
+  <PageHero
+    eyebrow="Portfolio"
+    title="Mes réalisations"
+    lead="Préparation, nettoyage et rénovation : le résultat de mon travail, en avant / après ou en photo. Chaque véhicule est traité personnellement, par moi."
+    crumbs={[{ name: 'Réalisations' }]}
+    compact
+  />
+
+  <section class="section gallery-section">
+    <div class="container">
+      <div class="filters" data-filters>
+        <p class="filters__label" id="filters-label"><Icon name="sliders-horizontal" /> Filtrer par prestation</p>
+        <div class="filters__list" role="group" aria-labelledby="filters-label">
+          <button type="button" class="filter" data-filter="all" aria-pressed="true">
+            Toutes {real.length > 0 && <span class="filter__count">{real.length}</span>}
+          </button>
+          {CATEGORY_KEYS.map((cat) => (
+            <button type="button" class="filter" data-filter={cat} aria-pressed="false">
+              {CATEGORIES[cat].label} {countFor(cat) > 0 && <span class="filter__count">{countFor(cat)}</span>}
+            </button>
+          ))}
+        </div>
+      </div>
+      <p class="sr-only" aria-live="polite" data-filter-status></p>
+
+      <div class="gallery" data-gallery>
+        {items.map((item) => <RealisationCard item={item} headingLevel="h2" />)}
+      </div>
+
+      <div class="gallery-empty" data-gallery-empty hidden>
+        <Icon name="image" />
+        <p>Aucune réalisation publiée dans cette catégorie pour le moment.</p>
+        <a href="/contact/" class="btn btn--primary">Demander un devis <Icon name="arrow-right" /></a>
+      </div>
+
+      <p class="gallery-more">
+        Plus de réalisations au quotidien sur
+        <a href={site.instagramHref} target="_blank" rel="noopener">Instagram @{site.instagram}</a>.
+      </p>
+    </div>
+  </section>
+
+  <RealisationLightbox items={items} />
+  <CtaBand title="Un résultat comme celui-ci pour vos véhicules ?" />
+</BaseLayout>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-filters]');
+  const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-gallery] .rcard'));
+  const empty = document.querySelector<HTMLElement>('[data-gallery-empty]');
+  const status = document.querySelector<HTMLElement>('[data-filter-status]');
+  const buttons = Array.from(root?.querySelectorAll<HTMLButtonElement>('[data-filter]') ?? []);
+
+  const apply = (cat: string, updateUrl = true) => {
+    let shown = 0;
+    cards.forEach((c) => {
+      const match = cat === 'all' || c.dataset.category === cat;
+      c.hidden = !match;
+      if (match) shown++;
+    });
+    buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.filter === cat)));
+    const active = buttons.find((b) => b.dataset.filter === cat);
+    const list = active?.parentElement;
+    if (active && list && list.scrollWidth > list.clientWidth) {
+      list.scrollTo({ left: active.offsetLeft - list.offsetLeft - 16, behavior: updateUrl ? 'smooth' : 'auto' });
+    }
+    if (empty) empty.hidden = shown > 0;
+    if (status) status.textContent = `${shown} réalisation${shown > 1 ? 's' : ''} affichée${shown > 1 ? 's' : ''}`;
+    if (updateUrl) {
+      const url = new URL(location.href);
+      if (cat === 'all') url.searchParams.delete('categorie');
+      else url.searchParams.set('categorie', cat);
+      history.replaceState(null, '', url);
+    }
+  };
+
+  buttons.forEach((b) => b.addEventListener('click', () => apply(b.dataset.filter || 'all')));
+  const initial = new URLSearchParams(location.search).get('categorie');
+  if (initial && buttons.some((b) => b.dataset.filter === initial)) apply(initial, false);
+</script>
+
+<style>
+  .gallery-section { padding-top: clamp(40px, 5vw, 64px); }
+  .filters { display: grid; gap: 14px; margin-bottom: clamp(28px, 4vw, 44px); }
+  .filters__label {
+    display: inline-flex; align-items: center; gap: 8px; margin: 0;
+    font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--c-text-3);
+  }
+  .filters__label :global(svg) { width: 16px; height: 16px; color: var(--c-orange); }
+  .filters__list { display: flex; flex-wrap: wrap; gap: 8px; }
+  @media (max-width: 640px) {
+    .filters__list {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      margin-inline: calc(var(--gutter) * -1);
+      padding-inline: var(--gutter);
+      padding-bottom: 6px;
+      scrollbar-width: none;
+    }
+    .filters__list::-webkit-scrollbar { display: none; }
+  }
+  .filter {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 42px;
+    padding: 8px 16px;
+    border: 1px solid var(--c-line-strong);
+    border-radius: 999px;
+    background: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--c-text-2);
+    transition: all 0.2s var(--ease);
+  }
+  .filter:hover { border-color: rgba(255, 255, 255, 0.35); color: var(--c-white); }
+  .filter[aria-pressed='true'] { background: var(--c-orange); border-color: var(--c-orange); color: #0a0a0b; font-weight: 600; }
+  .filter__count { font-size: 0.78rem; opacity: 0.7; font-variant-numeric: tabular-nums; }
+  .gallery { display: grid; gap: clamp(16px, 2vw, 24px); }
+  @media (min-width: 700px) { .gallery { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1100px) { .gallery { grid-template-columns: repeat(3, 1fr); } }
+  .gallery-empty {
+    display: grid; justify-items: center; gap: 14px; text-align: center;
+    padding: 56px 20px; border: 1px dashed var(--c-line-strong); border-radius: var(--radius-lg); color: var(--c-text-2);
+  }
+  .gallery-empty > :global(svg) { width: 36px; height: 36px; color: var(--c-orange); }
+  .gallery-more { margin-top: 40px; text-align: center; color: var(--c-text-3); }
+  .gallery-more a { color: var(--c-white); text-decoration: underline; text-decoration-color: var(--c-orange); text-underline-offset: 3px; }
+</style>

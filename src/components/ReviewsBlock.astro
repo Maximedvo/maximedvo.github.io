@@ -1,0 +1,78 @@
+---
+/**
+ * Bloc d'avis clients (page Avis et pages d'offres).
+ * 1. Avis saisis dans l'administration (vrais avis copiés depuis Google).
+ * 2. Option « synchronisation automatique » : /api/avis-google remplace le contenu par les avis Google en direct.
+ * Aucun avis n'est jamais inventé : sans données, des emplacements provisoires sont affichés.
+ */
+import { getCollection } from 'astro:content';
+import Icon from './Icon.astro';
+import BrandIcon from './BrandIcon.astro';
+import Stars from './Stars.astro';
+import ReviewCard from './ReviewCard.astro';
+import { site, formatRating } from '../lib/site';
+
+interface Props {
+  limit?: number;
+  clamp?: boolean;
+}
+const { limit, clamp = false } = Astro.props;
+
+const all = (await getCollection('avis', ({ data }) => data.publie !== false)).sort(
+  (a, b) => (b.data.date?.getTime() ?? 0) - (a.data.date?.getTime() ?? 0),
+);
+const reviews = limit ? all.slice(0, limit) : all;
+const { rating, count, reviewsUrl, writeReviewUrl, live } = site.google;
+const showPh = site.showPlaceholders;
+---
+<div class="reviews-block" data-reviews data-live={live ? '1' : undefined} data-limit={limit ?? ''} data-clamp={clamp ? '1' : undefined}>
+  <div class="rating-summary" data-reviews-summary>
+    {rating !== null ? (
+      <>
+        <span class="rating-summary__score">{formatRating(rating)}</span>
+        <div class="rating-summary__detail">
+          <Stars rating={rating} size="lg" />
+          <span class="rating-summary__count">
+            <span class="google-badge"><BrandIcon name="google" size={16} /> Google</span>
+            {count !== null && <span> · {count} avis</span>}
+          </span>
+        </div>
+      </>
+    ) : (
+      <div class="rating-summary__detail">
+        <span class="google-badge"><BrandIcon name="google" size={18} /> Mes avis Google</span>
+        {showPh ? (
+          <span class="rating-summary__count"><span class="ph-text">Note moyenne et nombre d'avis : à compléter</span></span>
+        ) : (
+          <span class="rating-summary__count">Découvrez ce que mes clients pensent de mon travail sur ma fiche Google.</span>
+        )}
+      </div>
+    )}
+    <div class="rating-summary__actions btn-row">
+      {reviewsUrl && (
+        <a href={reviewsUrl} class="btn btn--ghost" target="_blank" rel="noopener">
+          Consulter tous mes avis Google <Icon name="arrow-up-right" />
+        </a>
+      )}
+      {writeReviewUrl && (
+        <a href={writeReviewUrl} class="btn btn--ghost" target="_blank" rel="noopener">
+          Laisser un avis <Icon name="star" />
+        </a>
+      )}
+    </div>
+  </div>
+
+  <div class="reviews-grid" data-reviews-list>
+    {reviews.map((r) => <ReviewCard review={r.data} clamp={clamp} />)}
+    {reviews.length === 0 && showPh && [1, 2, 3].slice(0, limit ?? 3).map((n) => <ReviewCard index={n} />)}
+  </div>
+
+  <p class="attribution" data-reviews-attribution hidden>
+    Avis publiés sur Google, affichés automatiquement. Les avis sont la propriété de leurs auteurs.
+  </p>
+</div>
+
+<script>
+  import { initLiveReviews } from '../scripts/reviews';
+  initLiveReviews();
+</script>

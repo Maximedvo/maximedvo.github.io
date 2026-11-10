@@ -1,0 +1,49 @@
+{
+  "nom": "FlashUp",
+  "slogan": "Esthétique • Automobile",
+  "prenom": "",
+  "photoPortrait": "",
+  "experience": "1 an",
+  "telephone": "0490 46 89 16",
+  "telephoneInternational": "+32490468916",
+  "email": "flashup.be@gmail.com",
+  "whatsapp": "32490468916",
+  "whatsappMessage": "Bonjour, je viens de découvrir FlashUp. Je suis un professionnel de l'automobile et j'aimerais en savoir plus sur vos prestations.",
+  "instagram": "flashup.detailing",
+  "ville": "Liège",
+  "zone": "Liège et alentours, dans un rayon d'environ 50 km selon les prestations",
+  "communes": [
+    "Liège",
+    "Seraing",
+    "Herstal",
+    "Ans",
+    "Flémalle",
+    "Chaudfontaine",
+    "Visé",
+    "Verviers",
+    "Huy",
+    "Waremme",
+    "Spa",
+    "Eupen"
+  ],
+  "afficherEmplacementsProvisoires": true,
+  "google": {
+    "lienAvis": "https://share.google/3tsHcbDExUBZ7kYlB",
+    "lienLaisserAvis": "",
+    "note": "",
+    "nombreAvis": "",
+    "synchronisationAutomatique": false
+  },
+  "analytics": {
+    "ga4": "",
+    "searchConsole": ""
+  },
+  "legal": {
+    "denomination": "",
+    "formeJuridique": "",
+    "responsable": "",
+    "adresse": "",
+    "bce": "",
+    "tva": ""
+  }
+}

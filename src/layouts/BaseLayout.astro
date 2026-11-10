@@ -1,0 +1,117 @@
+---
+import '@fontsource-variable/archivo/wdth.css';
+import '../styles/global.css';
+import fontLatin from '@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2?url';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppFab from '../components/WhatsAppFab.astro';
+import CookieConsent from '../components/CookieConsent.astro';
+import { site } from '../lib/site';
+
+export interface Crumb { name: string; path: string; }
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  noindex?: boolean;
+  breadcrumbs?: Crumb[];
+  jsonLd?: Record<string, unknown>[];
+  showFab?: boolean;
+}
+
+const { title, description, image = '/og-image.jpg', noindex = false, breadcrumbs = [], jsonLd = [], showFab = true } = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, site.url).href;
+const ogImage = new URL(image, site.url).href;
+
+const business = {
+  '@context': 'https://schema.org',
+  '@type': 'AutomotiveBusiness',
+  '@id': `${site.url}/#entreprise`,
+  name: site.name,
+  description:
+    'Préparation esthétique automobile, detailing et rénovation pour les professionnels de l’automobile : marchands VO, garages, concessionnaires, sociétés de location et flottes.',
+  url: `${site.url}/`,
+  logo: `${site.url}/icon-512.png`,
+  image: `${site.url}/og-image.jpg`,
+  telephone: site.phoneHref.replace('tel:', ''),
+  email: site.email,
+  address: { '@type': 'PostalAddress', addressLocality: site.city, addressCountry: 'BE' },
+  areaServed: {
+    '@type': 'GeoCircle',
+    geoMidpoint: { '@type': 'GeoCoordinates', latitude: 50.6326, longitude: 5.5797 },
+    geoRadius: 50000,
+  },
+  sameAs: [site.instagramHref],
+  ...(site.legal.vat ? { vatID: site.legal.vat } : {}),
+};
+
+const crumbsLd = breadcrumbs.length
+  ? [{
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [{ name: 'Accueil', path: '/' }, ...breadcrumbs].map((c, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: c.name,
+        item: new URL(c.path, site.url).href,
+      })),
+    }]
+  : [];
+
+const structuredData = [business, ...crumbsLd, ...jsonLd];
+---
+<!doctype html>
+<html lang="fr-BE">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    <meta name="theme-color" content="#0a0a0b" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <link rel="preload" href={fontLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <!-- Open Graph / partages -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="FlashUp" />
+    <meta property="og:locale" content="fr_BE" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="FlashUp — Esthétique automobile" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    {site.analytics.searchConsole && <meta name="google-site-verification" content={site.analytics.searchConsole} />}
+
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData).replace(/</g, "\\u003c")} />
+  </head>
+  <body>
+    <a href="#contenu" class="skip-link">Aller au contenu</a>
+    <Header />
+    <main id="contenu">
+      <slot />
+    </main>
+    <Footer />
+    {showFab && <WhatsAppFab />}
+    <CookieConsent />
+    <script>
+      import '../scripts/site';
+    </script>
+  </body>
+</html>

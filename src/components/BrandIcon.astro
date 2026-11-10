@@ -1,0 +1,24 @@
+---
+/** Logos de marques (Simple Icons, CC0) : WhatsApp, Instagram, Google. */
+import { siWhatsapp, siInstagram, siGoogle } from 'simple-icons';
+
+interface Props {
+  name: 'whatsapp' | 'instagram' | 'google';
+  size?: number;
+  class?: string;
+  color?: 'current' | 'brand';
+}
+const { name, size = 20, class: className = '', color = 'current' } = Astro.props;
+const icon = { whatsapp: siWhatsapp, instagram: siInstagram, google: siGoogle }[name];
+const fill = color === 'brand' ? `#${icon.hex}` : 'currentColor';
+---
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  width={size}
+  height={size}
+  fill={fill}
+  class:list={['icon', `brand-${name}`, className]}
+  aria-hidden="true"
+  focusable="false"
+><path d={icon.path} /></svg>

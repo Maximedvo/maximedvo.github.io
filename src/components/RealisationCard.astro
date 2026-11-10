@@ -1,0 +1,40 @@
+---
+import BeforeAfter from './BeforeAfter.astro';
+import PhotoResult from './PhotoResult.astro';
+import Icon from './Icon.astro';
+import { altFor, type Realisation } from '../lib/realisations';
+
+interface Props {
+  item: Realisation;
+  headingLevel?: 'h2' | 'h3';
+  sizes?: string;
+}
+const { item, headingLevel = 'h3', sizes } = Astro.props;
+const Heading = headingLevel;
+---
+<article class="rcard" data-category={item.categorie} data-id={item.id} data-reveal>
+  {item.compare ? (
+    <BeforeAfter
+      before={item.before}
+      after={item.after}
+      altBefore={altFor(item, 'avant')}
+      altAfter={altFor(item, 'après')}
+      sizes={sizes}
+      label={`Comparer avant et après — ${item.titre}`}
+    />
+  ) : (
+    <PhotoResult image={item.after} alt={altFor(item, 'après')} openId={item.id} sizes={sizes} />
+  )}
+  <div class="rcard__body">
+    <div class="rcard__meta">
+      <span>{item.categorieLabel}</span>
+      {item.vehicule && <span class="rcard__vehicle">{item.vehicule}</span>}
+      {item.placeholder && <span class="ph-tag"><Icon name="image-plus" /> Emplacement provisoire</span>}
+    </div>
+    <Heading>{item.titre}</Heading>
+    {item.description && <p>{item.description}</p>}
+    <button type="button" class="rcard__open" data-lightbox-open={item.id}>
+      <Icon name="maximize-2" /> Voir en grand
+    </button>
+  </div>
+</article>

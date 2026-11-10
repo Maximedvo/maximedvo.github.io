@@ -1,0 +1,29 @@
+---
+/** Photo seule d'une réalisation (résultat « après »), cliquable pour l'ouvrir en grand. */
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+
+interface Props {
+  image?: ImageMetadata;
+  alt: string;
+  openId: string;
+  wide?: boolean;
+  sizes?: string;
+}
+const { image, alt, openId, wide = false, sizes = '(min-width: 1100px) 400px, (min-width: 700px) 50vw, 100vw' } = Astro.props;
+const widths = wide ? [640, 960, 1280, 1600] : [400, 640, 900, 1200];
+---
+<button type="button" class:list={['photo', { 'photo--wide': wide }]} data-lightbox-open={openId} aria-label={`Agrandir la photo : ${alt}`}>
+  {image ? (
+    <Image src={image} alt={alt} widths={widths} sizes={sizes} format="webp" quality={80} loading="lazy" />
+  ) : (
+    <span class="placeholder-media placeholder-media--after" role="img" aria-label="Emplacement provisoire : photo du résultat à fournir">
+      <Icon name="camera" class="placeholder-media__icon" />
+      <span class="placeholder-media__title">Photo du résultat</span>
+      <span class="placeholder-media__note">Emplacement provisoire — photo à fournir</span>
+    </span>
+  )}
+  <span class="ba__tag ba__tag--after" aria-hidden="true">Après</span>
+  <span class="photo__zoom" aria-hidden="true"><Icon name="maximize-2" /></span>
+</button>

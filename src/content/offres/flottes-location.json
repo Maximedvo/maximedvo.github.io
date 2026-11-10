@@ -1,0 +1,92 @@
+{
+  "ordre": 3,
+  "menu": "Flottes & location",
+  "cible": "Sociétés de location et gestionnaires de flottes",
+  "resumeCarte": "Des véhicules propres et prêts à repartir, entre deux locations ou deux missions.",
+  "surtitre": "Location · Flottes d'entreprise",
+  "titre": "Votre flotte automobile toujours prête à prendre la route.",
+  "introduction": "Je propose aux sociétés de location et aux entreprises disposant d'une flotte des solutions de nettoyage et de préparation adaptées à leur rythme.",
+  "image": "",
+  "seoTitre": "Nettoyage de flotte automobile en Belgique | FlashUp",
+  "seoDescription": "Nettoyage de flotte automobile et préparation entre deux locations, à Liège et environs. Ponctuel ou régulier, forfaits mensuels, facturation pro.",
+  "icone": "car-front",
+  "prestationsTitre": "Trois niveaux de prestation",
+  "prestations": [
+    {
+      "titre": "Nettoyage entre deux locations",
+      "description": "Une remise en état rapide pour enchaîner les locations.",
+      "elements": [
+        "Aspiration",
+        "Nettoyage des plastiques",
+        "Nettoyage des vitres",
+        "Nettoyage des tapis",
+        "Désinfection des surfaces de contact",
+        "Contrôle de propreté"
+      ]
+    },
+    {
+      "titre": "Nettoyage complet intérieur et extérieur",
+      "description": "Un véhicule entièrement propre, dedans comme dehors.",
+      "elements": [
+        "Nettoyage approfondi de l'habitacle",
+        "Prélavage",
+        "Lavage extérieur",
+        "Jantes",
+        "Vitres",
+        "Finitions"
+      ]
+    },
+    {
+      "titre": "Remise en état approfondie",
+      "description": "Pour les véhicules qui reviennent très sollicités.",
+      "elements": [
+        "Shampouinage",
+        "Extraction des textiles",
+        "Nettoyage des cuirs",
+        "Élimination des salissures importantes",
+        "Rénovation esthétique"
+      ]
+    }
+  ],
+  "avantagesTitre": "Une organisation pensée pour les flottes",
+  "avantages": [
+    {
+      "titre": "Ponctuel ou régulier",
+      "texte": "Une intervention isolée ou un passage planifié, selon votre rotation.",
+      "icone": "calendar-clock"
+    },
+    {
+      "titre": "Tarification selon le volume",
+      "texte": "Des conditions adaptées à la taille de votre flotte.",
+      "icone": "euro"
+    },
+    {
+      "titre": "Facturation professionnelle",
+      "texte": "Des factures claires, adaptées à votre comptabilité.",
+      "icone": "receipt"
+    },
+    {
+      "titre": "Organisation flexible",
+      "texte": "Des créneaux définis avec vous, au rythme de votre activité.",
+      "icone": "route"
+    },
+    {
+      "titre": "Forfaits mensuels possibles",
+      "texte": "Un cadre simple pour un entretien récurrent de vos véhicules.",
+      "icone": "calendar-check"
+    },
+    {
+      "titre": "Interlocuteur unique",
+      "texte": "Un seul contact — moi — pour organiser, suivre et ajuster les prestations.",
+      "icone": "user-check"
+    }
+  ],
+  "cta": "Demander une offre pour ma flotte",
+  "typeEntreprise": "societe-location",
+  "categoriesRealisations": [
+    "nettoyage-interieur",
+    "nettoyage-exterieur",
+    "renovation-interieure"
+  ],
+  "publie": true
+}

@@ -1,0 +1,79 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { site } from '../lib/site';
+
+const L = site.legal;
+const controller = L.denomination || 'FlashUp';
+const address = L.address || '[À compléter : adresse]';
+const hasGA = Boolean(site.analytics.ga4);
+---
+<BaseLayout
+  title="Politique de confidentialité — FlashUp"
+  description="Comment FlashUp collecte et protège vos données personnelles (RGPD) : finalités, durées de conservation, destinataires et vos droits."
+  breadcrumbs={[{ name: 'Politique de confidentialité', path: '/confidentialite/' }]}
+>
+  <PageHero eyebrow="RGPD" title="Politique de confidentialité" crumbs={[{ name: 'Confidentialité' }]} compact />
+  <section class="section">
+    <div class="container">
+      <div class="prose">
+        <p><em>Dernière mise à jour : 9 novembre 2026.</em></p>
+        <p>FlashUp attache une grande importance à la protection de vos données personnelles. Cette politique explique quelles données nous traitons, pourquoi, et quels sont vos droits, conformément au Règlement général sur la protection des données (RGPD — règlement (UE) 2016/679) et à la législation belge.</p>
+
+        <h2>1. Responsable du traitement</h2>
+        <p><strong>{controller}</strong> (nom commercial FlashUp){L.bce && <>, numéro d'entreprise {L.bce}</>}, {address}. Contact : <a href={site.emailHref}>{site.email}</a> — <a href={site.phoneHref}>{site.phone}</a>.</p>
+
+        <h2>2. Données que nous traitons</h2>
+        <ul>
+          <li><strong>Formulaire de demande de devis</strong> : nom de l'entreprise, nom et prénom, téléphone, adresse e-mail, type d'entreprise, volume approximatif de véhicules, prestations recherchées, fréquence souhaitée, message et page d'origine de la demande.</li>
+          <li><strong>Contact direct</strong> (téléphone, WhatsApp, e-mail, Instagram) : les informations que vous choisissez de nous communiquer.</li>
+          <li><strong>Données techniques</strong> : journaux techniques de l'hébergeur (adresse IP, type de navigateur, date et heure), utilisés pour la sécurité et le bon fonctionnement du site.</li>
+          {hasGA && <li><strong>Mesure d'audience</strong> (uniquement avec votre accord) : pages consultées, durée de visite, type d'appareil, provenance approximative.</li>}
+        </ul>
+
+        <h2>3. Finalités et bases légales</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Finalité</th><th>Base légale</th></tr></thead>
+            <tbody>
+              <tr><td>Répondre à votre demande et établir une offre</td><td>Mesures précontractuelles prises à votre demande (art. 6.1.b RGPD)</td></tr>
+              <tr><td>Exécuter les prestations et gérer la relation client</td><td>Exécution du contrat (art. 6.1.b)</td></tr>
+              <tr><td>Suivi commercial de nos contacts professionnels</td><td>Intérêt légitime (art. 6.1.f)</td></tr>
+              <tr><td>Facturation et comptabilité</td><td>Obligation légale (art. 6.1.c)</td></tr>
+              <tr><td>Sécurité du site et lutte contre le spam</td><td>Intérêt légitime (art. 6.1.f)</td></tr>
+              {hasGA && <tr><td>Statistiques de fréquentation</td><td>Consentement (art. 6.1.a), retirable à tout moment</td></tr>}
+            </tbody>
+          </table>
+        </div>
+        <p>Nous ne vendons ni ne louons jamais vos données. Elles ne font l'objet d'aucune prise de décision automatisée.</p>
+
+        <h2>4. Destinataires et sous-traitants</h2>
+        <p>Vos données sont destinées à FlashUp uniquement. Pour fonctionner, nous faisons appel aux prestataires suivants :</p>
+        <ul>
+          <li><strong>Netlify, Inc.</strong> (États-Unis) : hébergement du site et réception des formulaires.</li>
+          <li><strong>Google</strong> : messagerie électronique professionnelle{hasGA && ' et mesure d’audience (Google Analytics 4, uniquement avec votre accord)'}.</li>
+          <li><strong>WhatsApp / Meta</strong> : uniquement si vous choisissez de nous contacter via WhatsApp, selon les conditions de ce service.</li>
+        </ul>
+        <p>Certains de ces prestataires peuvent traiter des données en dehors de l'Union européenne. Ces transferts sont encadrés par des garanties appropriées (cadre de protection des données UE–États-Unis et/ou clauses contractuelles types de la Commission européenne).</p>
+
+        <h2>5. Durées de conservation</h2>
+        <ul>
+          <li>Demandes de devis sans suite : 3 ans maximum à compter du dernier contact.</li>
+          <li>Données clients : pendant la relation commerciale, puis pendant la durée légale de conservation des documents comptables.</li>
+          <li>Journaux techniques : durée limitée fixée par l'hébergeur.</li>
+          {hasGA && <li>Données de mesure d'audience : 14 mois maximum.</li>}
+        </ul>
+
+        <h2>6. Vos droits</h2>
+        <p>Vous disposez d'un droit d'accès, de rectification, d'effacement, de limitation, d'opposition et de portabilité de vos données, ainsi que du droit de retirer votre consentement à tout moment. Pour les exercer, écrivez-nous à <a href={site.emailHref}>{site.email}</a>. Nous répondons dans un délai d'un mois.</p>
+        <p>Si vous estimez que vos droits ne sont pas respectés, vous pouvez introduire une réclamation auprès de l'<strong>Autorité de protection des données</strong> (APD), rue de la Presse 35, 1000 Bruxelles — <a href="https://www.autoriteprotectiondonnees.be" target="_blank" rel="noopener">www.autoriteprotectiondonnees.be</a>.</p>
+
+        <h2>7. Sécurité</h2>
+        <p>Le site est servi exclusivement en HTTPS. L'accès aux demandes reçues est limité aux personnes habilitées de FlashUp, et le formulaire est protégé contre les envois automatisés.</p>
+
+        <h2>8. Cookies</h2>
+        <p>Pour en savoir plus sur les cookies et gérer vos préférences, consultez notre <a href="/cookies/">politique cookies</a>.</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

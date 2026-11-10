@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { site } from '../lib/site';
+
+const L = site.legal;
+const v = (value: string, label: string) => value || `[À compléter : ${label}]`;
+const isPh = (value: string) => !value;
+---
+<BaseLayout
+  title="Mentions légales — FlashUp"
+  description="Mentions légales du site flashup-pro.be : éditeur, numéro d'entreprise, hébergement et conditions d'utilisation."
+  breadcrumbs={[{ name: 'Mentions légales', path: '/mentions-legales/' }]}
+>
+  <PageHero eyebrow="Informations légales" title="Mentions légales" crumbs={[{ name: 'Mentions légales' }]} compact />
+  <section class="section">
+    <div class="container">
+      <div class="prose">
+        <p>Conformément au Code de droit économique belge (notamment ses livres III et XII), voici les informations relatives à l'éditeur du site <strong>flashup-pro.be</strong>.</p>
+
+        <h2>Éditeur du site</h2>
+        <div class="table-wrap">
+          <table>
+            <tbody>
+              <tr><th scope="row">Dénomination</th><td class:list={{ 'ph-cell': isPh(L.denomination) }}>{v(L.denomination, 'nom légal ou dénomination sociale')}</td></tr>
+              <tr><th scope="row">Nom commercial</th><td>FlashUp</td></tr>
+              <tr><th scope="row">Forme juridique</th><td class:list={{ 'ph-cell': isPh(L.form) }}>{v(L.form, 'personne physique, SRL…')}</td></tr>
+              <tr><th scope="row">Responsable de la publication</th><td class:list={{ 'ph-cell': isPh(L.manager) }}>{v(L.manager, 'nom et prénom')}</td></tr>
+              <tr><th scope="row">Adresse d'établissement</th><td class:list={{ 'ph-cell': isPh(L.address) }}>{v(L.address, 'adresse complète')}</td></tr>
+              <tr><th scope="row">Numéro d'entreprise (BCE)</th><td class:list={{ 'ph-cell': isPh(L.bce) }}>{v(L.bce, 'BE 0xxx.xxx.xxx')}</td></tr>
+              <tr><th scope="row">Numéro de TVA</th><td class:list={{ 'ph-cell': isPh(L.vat) }}>{v(L.vat, 'numéro de TVA ou mention « non assujetti »')}</td></tr>
+              <tr><th scope="row">Téléphone</th><td><a href={site.phoneHref}>{site.phone}</a></td></tr>
+              <tr><th scope="row">E-mail</th><td><a href={site.emailHref}>{site.email}</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Activité : préparation esthétique automobile, nettoyage, detailing et rénovation esthétique de véhicules pour les professionnels.</p>
+
+        <h2>Hébergement</h2>
+        <p>Le site est hébergé par Netlify, Inc., San Francisco (Californie, États-Unis) — <a href="https://www.netlify.com" target="_blank" rel="noopener">www.netlify.com</a>.</p>
+
+        <h2>Propriété intellectuelle</h2>
+        <p>L'ensemble des éléments du site (textes, logo, photographies, mise en page) est la propriété de FlashUp ou utilisé avec autorisation. Toute reproduction, représentation ou diffusion, totale ou partielle, sans autorisation écrite préalable est interdite.</p>
+        <p>Les photographies de réalisations présentent des véhicules traités par FlashUp. Les marques et modèles éventuellement cités appartiennent à leurs propriétaires respectifs.</p>
+
+        <h2>Responsabilité</h2>
+        <p>Les informations publiées sur ce site sont fournies à titre indicatif et peuvent être modifiées à tout moment. Elles ne constituent pas une offre contractuelle : chaque prestation fait l'objet d'un devis personnalisé. FlashUp ne saurait être tenue responsable d'une interruption du site, d'erreurs ou d'omissions, ni du contenu des sites externes vers lesquels des liens renvoient.</p>
+
+        <h2>Données personnelles et cookies</h2>
+        <p>Le traitement de vos données est décrit dans notre <a href="/confidentialite/">politique de confidentialité</a> et l'utilisation des cookies dans notre <a href="/cookies/">politique cookies</a>.</p>
+
+        <h2>Droit applicable</h2>
+        <p>Le présent site et ses mentions légales sont soumis au droit belge. En cas de litige, et à défaut de solution amiable, les juridictions de l'arrondissement judiciaire de Liège sont compétentes.</p>
+
+        <h2>Crédits</h2>
+        <p>Icônes : Lucide (licence ISC) et Simple Icons (licence CC0). Police de caractères : Archivo (SIL Open Font License).</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .ph-cell { color: var(--c-orange); }
+</style>

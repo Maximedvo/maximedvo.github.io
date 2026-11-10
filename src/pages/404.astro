@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+---
+<BaseLayout title="Page introuvable — FlashUp" description="Cette page n'existe pas ou a été déplacée." noindex>
+  <section class="section notfound">
+    <div class="container container--narrow">
+      <p class="eyebrow">Erreur 404</p>
+      <h1>Cette page a pris un autre virage.</h1>
+      <p class="lead">La page demandée n'existe pas ou a été déplacée. Reprenez la route depuis l'accueil ou contactez-moi directement.</p>
+      <div class="btn-row">
+        <a href="/" class="btn btn--primary">Retour à l'accueil <Icon name="arrow-right" /></a>
+        <a href="/contact/" class="btn btn--ghost">Demander un devis</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .notfound { padding-top: calc(var(--header-h) + 80px); min-height: 75vh; }
+  .notfound .container { display: grid; gap: 22px; justify-items: start; }
+  .notfound .eyebrow { margin-bottom: 0; }
+</style>

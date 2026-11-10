@@ -1,0 +1,481 @@
+---
+/**
+ * Accueil — pensé pour les visiteurs arrivant via le QR code du flyer (mobile d'abord).
+ * Ordre : 1. qui je suis  2. FlashUp  3. réalisations + avis mélangés  4. « Vous êtes… ? »  5. contact
+ */
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import BrandIcon from '../components/BrandIcon.astro';
+import Stars from '../components/Stars.astro';
+import RealisationCard from '../components/RealisationCard.astro';
+import RealisationLightbox from '../components/RealisationLightbox.astro';
+import ReviewCard from '../components/ReviewCard.astro';
+import ContactForm from '../components/ContactForm.astro';
+import ContactMethods from '../components/ContactMethods.astro';
+import silhouette from '../assets/brand/silhouette-flashup.png';
+import { site, formatRating } from '../lib/site';
+import { resolveImage } from '../lib/images';
+import { getOffres, offreUrl } from '../lib/offres';
+import { getRealisations, withPlaceholders, type Realisation } from '../lib/realisations';
+
+const portrait = resolveImage(site.portrait);
+const name = site.firstName;
+const offres = await getOffres();
+
+// --- Fil « réalisations + avis » -------------------------------------------
+const reals = withPlaceholders(
+  (await getRealisations()).slice(0, 6),
+  ['renovation-complete', 'nettoyage-interieur', 'renovation-phares', 'preparation-revente'],
+  4,
+);
+const avis = (await getCollection('avis', ({ data }) => data.publie !== false))
+  .sort((a, b) => (b.data.date?.getTime() ?? 0) - (a.data.date?.getTime() ?? 0))
+  .slice(0, 4)
+  .map((a) => a.data);
+type Avis = (typeof avis)[number];
+const reviewSlots: (Avis | null)[] = avis.length ? avis : site.showPlaceholders ? [null, null] : [];
+
+type FeedItem = { kind: 'real'; item: Realisation } | { kind: 'avis'; review: Avis | null; n: number };
+const feed: FeedItem[] = [];
+{
+  let r = 0;
+  let a = 0;
+  // motif : réalisation, avis, réalisation, réalisation, avis…
+  while (r < reals.length || a < reviewSlots.length) {
+    if (r < reals.length) feed.push({ kind: 'real', item: reals[r++] });
+    if (a < reviewSlots.length) {
+      feed.push({ kind: 'avis', review: reviewSlots[a], n: a + 1 });
+      a++;
+    }
+    if (r < reals.length) feed.push({ kind: 'real', item: reals[r++] });
+  }
+}
+
+const points = [
+  { icon: 'user-check', title: 'Un seul interlocuteur : moi', text: 'Du premier appel à la facture, vous savez toujours à qui vous parlez.' },
+  { icon: 'zap', title: 'Motivé et réactif', text: 'Je développe FlashUp client après client : chaque véhicule compte.' },
+  { icon: 'sparkles', title: 'Le souci du détail', text: 'La même exigence que pour mes clients particuliers, sur chaque véhicule.' },
+  { icon: 'route', title: 'Flexible', text: 'Ponctuel ou régulier, je m’adapte à votre rythme, à Liège et dans un rayon d’environ 50 km.' },
+];
+
+const { rating, count, reviewsUrl, live } = site.google;
+---
+<BaseLayout
+  title="FlashUp — Préparateur esthétique automobile indépendant à Liège"
+  description="Indépendant et motivé, je prépare, nettoie et rénove les véhicules des professionnels de l'automobile à Liège : marchands VO, garages, concessions et flottes."
+  jsonLd={[{ '@context': 'https://schema.org', '@type': 'WebSite', name: 'FlashUp', url: `${site.url}/`, inLanguage: 'fr-BE' }]}
+>
+  <!-- ============ 1. QUI JE SUIS ============ -->
+  <section class="hero" id="qui-suis-je">
+    <div class="hero__art" aria-hidden="true">
+      <div class="hero__glow"></div>
+      <div class="hero__silhouette">
+        <Image src={silhouette} alt="" widths={[640, 1100, 1456]} sizes="(min-width: 1024px) 60vw, 120vw" format="webp" loading="eager" />
+      </div>
+    </div>
+
+    <div class="container hero__grid">
+      <figure class="hero__photo">
+        {portrait ? (
+          <Image
+            src={portrait}
+            alt={name ? `${name}, fondateur de FlashUp` : 'Le fondateur de FlashUp'}
+            widths={[400, 640, 900, 1200]}
+            sizes="(min-width: 1024px) 40vw, 100vw"
+            format="webp"
+            quality={80}
+            loading="eager"
+            fetchpriority="high"
+          />
+        ) : (
+          <div class="placeholder-media hero__ph" role="img" aria-label="Emplacement provisoire : votre photo à fournir">
+            <Icon name="user-round" class="placeholder-media__icon" />
+            <span class="placeholder-media__title">Votre photo</span>
+            <span class="placeholder-media__note">Emplacement provisoire — portrait à fournir</span>
+          </div>
+        )}
+        <figcaption class="hero__badge">
+          <span class="hero__badge-dot" aria-hidden="true"></span>
+          <span>
+            <strong>{name || (site.showPlaceholders ? '[Prénom]' : 'FlashUp')}</strong>
+            <small>Fondateur de FlashUp · Indépendant</small>
+          </span>
+        </figcaption>
+      </figure>
+
+      <div class="hero__text">
+        <p class="eyebrow">Préparateur esthétique automobile · {site.city}</p>
+        {(name || site.showPlaceholders) && (
+          <p class="hero__hello">
+            Bonjour, moi c'est {name ? <span class="text-orange">{name}</span> : <span class="ph-text">prénom à compléter</span>}.
+          </p>
+        )}
+        <h1>Un indépendant motivé pour préparer vos véhicules.</h1>
+        <p class="lead hero__lead">
+          Je suis seul derrière FlashUp : c'est moi qui vous réponds, moi qui prépare vos véhicules et moi qui contrôle le résultat.
+          Un seul interlocuteur, et le soin du détail de quelqu'un qui construit sa réputation véhicule après véhicule.
+        </p>
+        <div class="btn-row btn-row--stack">
+          <a href="#travail" class="btn btn--primary btn--lg">Voir mon travail <Icon name="arrow-down" /></a>
+          <a href={site.whatsappHref} class="btn btn--ghost btn--lg btn--whatsapp" target="_blank" rel="noopener"><BrandIcon name="whatsapp" /> M'écrire sur WhatsApp</a>
+        </div>
+        <ul class="hero__trust">
+          <li><Icon name="calendar-check" /> {site.experience} d'expérience</li>
+          <li><Icon name="user-round" /> 100 % indépendant</li>
+          <li><Icon name="map-pin" /> {site.city} et ~50 km</li>
+          {rating !== null && (
+            <li class="hero__rating"><Stars rating={rating} /> {formatRating(rating)} sur Google{count !== null && ` (${count} avis)`}</li>
+          )}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2. FLASHUP ============ -->
+  <section class="section" id="flashup">
+    <div class="container story">
+      <div class="story__head" data-reveal>
+        <p class="eyebrow">FlashUp, mon entreprise</p>
+        <h2>D'abord pour les particuliers. Aujourd'hui pour les pros.</h2>
+      </div>
+      <div class="story__body" data-reveal>
+        <p class="lead">
+          J'ai lancé FlashUp il y a {site.experience}. Jusqu'ici, je travaillais uniquement pour des particuliers : nettoyage intérieur
+          et extérieur, rénovation, phares… Avec, à chaque fois, le même objectif : rendre un véhicule dont son propriétaire est fier.
+        </p>
+        <p class="muted">
+          Aujourd'hui, j'ouvre FlashUp aux professionnels de l'automobile : marchands VO, garages, concessions, loueurs et
+          gestionnaires de flottes. Même exigence, même motivation, avec l'organisation et la régularité qu'attend un pro.
+        </p>
+      </div>
+      <ul class="points" data-reveal>
+        {points.map((p) => (
+          <li class="point">
+            <span class="icon-box"><Icon name={p.icon} /></span>
+            <div>
+              <h3>{p.title}</h3>
+              <p>{p.text}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ 3. MON TRAVAIL + AVIS ============ -->
+  <section class="section section--alt" id="travail">
+    <div class="container">
+      <div class="section-head section-head--split" data-reveal>
+        <div class="travail__head">
+          <p class="eyebrow">Mon travail · Vos avis</p>
+          <h2>Des résultats, et des clients satisfaits.</h2>
+          <p class="lead">
+            Avant / après, photos de résultats et avis Google. Les avis viennent de mes clients particuliers :
+            la même exigence s'applique à vos véhicules.
+          </p>
+        </div>
+        {rating !== null && (
+          <a href={reviewsUrl || '/avis/'} class="score" target={reviewsUrl ? '_blank' : undefined} rel={reviewsUrl ? 'noopener' : undefined}>
+            <span class="score__value">{formatRating(rating)}</span>
+            <span class="score__detail">
+              <Stars rating={rating} />
+              <small><BrandIcon name="google" size={13} /> {count !== null ? `${count} avis Google` : 'Avis Google'}</small>
+            </span>
+          </a>
+        )}
+      </div>
+
+      {feed.length > 0 ? (
+        <div class="feed" data-feed data-live={live ? '1' : undefined}>
+          {feed.map((f) =>
+            f.kind === 'real' ? (
+              <RealisationCard item={f.item} />
+            ) : (
+              <ReviewCard review={f.review ?? undefined} index={f.n} clamp quote />
+            ),
+          )}
+        </div>
+      ) : (
+        <p class="muted">Découvrez mes réalisations sur Instagram et mes avis sur Google.</p>
+      )}
+
+      <div class="btn-row feed__actions" data-reveal>
+        <a href="/realisations/" class="btn btn--ghost">Toutes mes réalisations <Icon name="arrow-right" /></a>
+        {reviewsUrl && <a href={reviewsUrl} class="btn btn--ghost" target="_blank" rel="noopener"><BrandIcon name="google" /> Tous mes avis Google</a>}
+        <a href={site.instagramHref} class="btn btn--ghost" target="_blank" rel="noopener"><BrandIcon name="instagram" /> @{site.instagram}</a>
+      </div>
+    </div>
+    <RealisationLightbox items={reals} />
+  </section>
+
+  <!-- ============ 4. VOUS ÊTES… ? ============ -->
+  <section class="section" id="solutions">
+    <div class="container">
+      <div class="section-head section-head--center" data-reveal>
+        <p class="eyebrow">Solutions pros</p>
+        <h2>Vous êtes… ?</h2>
+        <p class="lead">Choisissez votre profil : je vous explique ce que je peux faire pour vous.</p>
+      </div>
+      <div class="profiles">
+        {offres.map((o) => (
+          <a href={offreUrl(o.id)} class="profile" data-reveal>
+            <span class="profile__icon"><Icon name={o.data.icone} strokeWidth={1.5} /></span>
+            <span class="profile__text">
+              <strong>{o.data.cible}</strong>
+              <small>{o.data.resumeCarte}</small>
+            </span>
+            <span class="profile__go" aria-hidden="true"><Icon name="arrow-right" /></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 5. CONTACT ============ -->
+  <section class="section section--alt" id="contact">
+    <div class="container contact">
+      <div class="contact__aside" data-reveal>
+        <p class="eyebrow">Contact</p>
+        <h2>Parlons de vos véhicules.</h2>
+        <p class="lead">Un appel, un message WhatsApp ou le formulaire : je vous réponds personnellement.</p>
+        <ContactMethods />
+      </div>
+      <div class="contact__form" data-reveal>
+        <ContactForm id="devis-accueil" />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { initLiveFeed } from '../scripts/reviews';
+  initLiveFeed();
+</script>
+
+<style>
+  /* ---------- 1. Qui je suis ---------- */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    padding-top: calc(var(--header-h) + clamp(20px, 4vw, 56px));
+    padding-bottom: clamp(56px, 8vw, 112px);
+  }
+  @media (min-width: 1024px) {
+    .hero { min-height: min(100svh, 940px); display: flex; align-items: center; }
+  }
+  .hero__grid { display: grid; gap: 28px; width: 100%; }
+  @media (min-width: 1024px) {
+    .hero__grid {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      grid-template-areas: 'text photo';
+      align-items: center;
+      gap: clamp(40px, 5vw, 80px);
+    }
+    .hero__text { grid-area: text; }
+    .hero__photo { grid-area: photo; }
+  }
+
+  .hero__photo {
+    position: relative;
+    margin: 0;
+    aspect-ratio: 4 / 3;
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--c-surface);
+    border: 1px solid var(--c-line-strong);
+    box-shadow: var(--shadow);
+  }
+  @media (min-width: 560px) and (max-width: 1023px) { .hero__photo { aspect-ratio: 16 / 10; } }
+  @media (min-width: 1024px) { .hero__photo { aspect-ratio: 4 / 5; max-height: 72vh; justify-self: end; width: 100%; } }
+  .hero__photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%; }
+  .hero__photo::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 45%;
+    background: linear-gradient(0deg, rgba(10, 10, 11, 0.85), transparent);
+    pointer-events: none;
+  }
+  .hero__ph { border-radius: 14px; padding-bottom: 72px; }
+  .hero__badge {
+    position: absolute;
+    left: 16px;
+    bottom: 16px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px 10px 12px;
+    border-radius: 999px;
+    background: rgba(10, 10, 11, 0.8);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--c-line-strong);
+  }
+  .hero__badge strong { display: block; color: var(--c-white); font-size: 0.95rem; line-height: 1.2; }
+  .hero__badge small { display: block; color: var(--c-text-2); font-size: 0.78rem; }
+  .hero__badge-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--c-orange);
+    box-shadow: 0 0 0 4px rgba(240, 118, 12, 0.25);
+    flex: none;
+  }
+
+  .hero__text { position: relative; z-index: 2; display: grid; gap: 20px; justify-items: start; }
+  .hero__text .eyebrow { margin-bottom: 0; }
+  .hero__hello {
+    margin: 0;
+    font-size: clamp(1.15rem, 1rem + 0.8vw, 1.5rem);
+    font-weight: 600;
+    font-stretch: 112%;
+    color: var(--c-white);
+  }
+  .hero h1 { max-width: 16ch; font-size: clamp(2.1rem, 1.3rem + 3.4vw, 4.1rem); line-height: 1.04; }
+  .hero__lead { max-width: 52ch; }
+  .hero__trust {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 24px;
+    margin-top: 4px;
+    font-size: 0.9rem;
+    color: var(--c-text-2);
+  }
+  .hero__trust li { display: inline-flex; align-items: center; gap: 8px; }
+  .hero__trust li > :global(svg) { width: 17px; height: 17px; color: var(--c-orange); }
+  .hero__rating { color: var(--c-white); font-weight: 600; }
+
+  .hero__art { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+  .hero__glow {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(55% 45% at 80% 20%, rgba(240, 118, 12, 0.13), transparent 70%),
+      radial-gradient(40% 20% at 50% 100%, rgba(240, 118, 12, 0.14), transparent 70%);
+  }
+  .hero__silhouette {
+    position: absolute;
+    left: -6%;
+    bottom: 18px;
+    width: min(70vw, 1100px);
+    opacity: 0.16;
+  }
+  .hero__silhouette img { width: 100%; height: auto; }
+  @media (max-width: 760px) { .hero__silhouette { width: 140vw; left: -20%; opacity: 0.12; } }
+
+  /* ---------- 2. FlashUp ---------- */
+  .story { display: grid; gap: clamp(24px, 4vw, 48px); }
+  @media (min-width: 980px) {
+    .story { grid-template-columns: 1fr 1.1fr; column-gap: clamp(40px, 6vw, 96px); }
+    .points { grid-column: 1 / -1; }
+  }
+  .story h2 { max-width: 15ch; }
+  .story__head .eyebrow { margin-bottom: 18px; }
+  .story__body { display: grid; gap: 18px; align-content: start; }
+  .story__body .lead { color: var(--c-text); }
+  .points { list-style: none; display: grid; gap: 12px; margin-top: 8px; }
+  @media (min-width: 640px) { .points { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1100px) { .points { grid-template-columns: repeat(4, 1fr); } }
+  .point {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 16px;
+    align-items: start;
+    padding: 20px;
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius-lg);
+    background: var(--c-surface);
+  }
+  @media (min-width: 1100px) { .point { grid-template-columns: 1fr; } }
+  .point h3 { font-size: 1.05rem; margin-bottom: 6px; }
+  .point p { color: var(--c-text-2); font-size: 0.93rem; line-height: 1.55; }
+
+  /* ---------- 3. Fil réalisations + avis ---------- */
+  .travail__head { display: grid; gap: 18px; }
+  .travail__head .eyebrow { margin-bottom: 0; }
+  .score {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    border: 1px solid var(--c-line-strong);
+    border-radius: var(--radius-lg);
+    background: var(--c-surface);
+    transition: border-color 0.25s;
+    justify-self: start;
+  }
+  .score:hover { border-color: var(--c-orange-line); }
+  .score__value { font-size: 2.2rem; font-weight: 700; font-stretch: 112%; color: var(--c-white); line-height: 1; }
+  .score__detail { display: grid; gap: 4px; }
+  .score__detail small { display: inline-flex; align-items: center; gap: 6px; color: var(--c-text-2); font-size: 0.82rem; }
+  .feed { columns: 1; column-gap: clamp(16px, 2vw, 24px); }
+  @media (min-width: 700px) { .feed { columns: 2; } }
+  @media (min-width: 1100px) { .feed { columns: 3; } }
+  .feed > :global(*) {
+    break-inside: avoid;
+    margin-bottom: clamp(16px, 2vw, 24px);
+    width: 100%;
+  }
+  .feed > :global(.review) { height: auto; }
+  .feed__actions { margin-top: clamp(4px, 1vw, 8px); }
+  @media (max-width: 520px) { .feed__actions .btn { width: 100%; } }
+
+  /* ---------- 4. Vous êtes… ? ---------- */
+  .section-head--center { margin-inline: auto; text-align: center; justify-items: center; }
+  .profiles { display: grid; gap: 14px; max-width: 1080px; margin-inline: auto; }
+  @media (min-width: 960px) { .profiles { grid-template-columns: repeat(3, 1fr); gap: 20px; } }
+  .profile {
+    position: relative;
+    display: grid;
+    grid-template-columns: 56px 1fr 24px;
+    gap: 16px;
+    align-items: center;
+    min-height: 104px;
+    padding: 20px;
+    border: 1px solid var(--c-line-strong);
+    border-radius: 14px;
+    background: linear-gradient(150deg, rgba(240, 118, 12, 0.08), transparent 55%), var(--c-surface);
+    transition: border-color 0.25s var(--ease), transform 0.3s var(--ease);
+  }
+  @media (min-width: 960px) {
+    .profile { grid-template-columns: 1fr; align-content: start; gap: 18px; padding: 28px; min-height: 250px; }
+    .profile__go { position: absolute; right: 24px; top: 28px; }
+  }
+  .profile:hover { border-color: var(--c-orange); transform: translateY(-3px); }
+  .profile__icon {
+    width: 56px;
+    height: 56px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: var(--c-orange);
+    color: #0a0a0b;
+  }
+  .profile__icon :global(svg) { width: 28px; height: 28px; }
+  .profile__text strong { display: block; font-size: 1.12rem; font-stretch: 112%; color: var(--c-white); line-height: 1.25; }
+  .profile__text small { display: block; margin-top: 6px; font-size: 0.9rem; color: var(--c-text-2); line-height: 1.45; }
+  .profile__go { color: var(--c-orange); }
+  @media (max-width: 559px) {
+    .profile { min-height: 84px; padding: 16px 18px; }
+    .profile__text small { display: none; }
+  }
+  .profile__go :global(svg) { width: 24px; height: 24px; transition: transform 0.25s var(--ease); }
+  .profile:hover .profile__go :global(svg) { transform: translateX(4px); }
+
+  /* ---------- 5. Contact ---------- */
+  .contact { display: grid; gap: clamp(36px, 5vw, 72px); }
+  @media (min-width: 1040px) { .contact { grid-template-columns: 0.85fr 1.15fr; align-items: start; } }
+  .contact__aside { display: grid; gap: 20px; align-content: start; }
+  .contact__aside .eyebrow { margin-bottom: 0; }
+  @media (min-width: 1040px) { .contact__aside { position: sticky; top: calc(var(--header-h) + 24px); } }
+  .contact__form {
+    padding: clamp(22px, 3.5vw, 44px);
+    border: 1px solid var(--c-line);
+    border-radius: 14px;
+    background: var(--c-bg);
+  }
+</style>

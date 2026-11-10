@@ -1,0 +1,174 @@
+---
+/**
+ * Visionneuse plein écran des réalisations : comparateur avant/après en grand,
+ * vues « avant » / « après » séparées, photos supplémentaires, navigation clavier.
+ */
+import { getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Icon from './Icon.astro';
+import { altFor, type Realisation } from '../lib/realisations';
+
+interface Props { items: Realisation[]; }
+const { items } = Astro.props;
+
+const big = async (img?: ImageMetadata) => {
+  if (!img) return null;
+  const r = await getImage({ src: img, width: Math.min(img.width, 1800), format: 'webp', quality: 82 });
+  return { src: r.src, w: Number(r.attributes.width ?? img.width), h: Number(r.attributes.height ?? img.height) };
+};
+
+const data = await Promise.all(
+  items.map(async (r) => ({
+    id: r.id,
+    titre: r.titre,
+    categorie: r.categorieLabel,
+    vehicule: r.vehicule,
+    description: r.description,
+    placeholder: r.placeholder,
+    compare: r.compare,
+    altBefore: altFor(r, 'avant'),
+    altAfter: altFor(r, 'après'),
+    before: await big(r.before),
+    after: await big(r.after),
+    photos: (await Promise.all(r.photos.map(big))).filter(Boolean),
+  })),
+);
+---
+<dialog class="lightbox" data-lightbox aria-labelledby="lightbox-title">
+  <div class="lightbox__inner">
+    <div class="lightbox__bar">
+      <span class="lightbox__counter" data-lb-counter></span>
+      <button type="button" class="lightbox__close" data-lb-close aria-label="Fermer la visionneuse">
+        <Icon name="x" />
+      </button>
+    </div>
+
+    <div class="lightbox__stage" data-lb-stage></div>
+
+    <div class="lightbox__info">
+      <div class="lightbox__meta" data-lb-meta></div>
+      <h2 class="lightbox__title" id="lightbox-title" data-lb-title></h2>
+      <p class="lightbox__desc" data-lb-desc></p>
+      <div class="lightbox__modes" role="group" aria-label="Mode d'affichage" data-lb-modes>
+        <button type="button" data-lb-mode="compare" aria-pressed="true">Comparer</button>
+        <button type="button" data-lb-mode="before" aria-pressed="false">Avant</button>
+        <button type="button" data-lb-mode="after" aria-pressed="false">Après</button>
+      </div>
+      <div class="lightbox__thumbs" data-lb-thumbs></div>
+      <a href="/contact/" class="btn btn--primary lightbox__cta">Demander un devis <Icon name="arrow-right" /></a>
+    </div>
+
+    <div class="lightbox__nav">
+      <button type="button" class="lightbox__arrow" data-lb-prev aria-label="Réalisation précédente"><Icon name="chevron-left" /></button>
+      <button type="button" class="lightbox__arrow" data-lb-next aria-label="Réalisation suivante"><Icon name="chevron-right" /></button>
+    </div>
+  </div>
+  <script type="application/json" data-lightbox-data set:html={JSON.stringify(data).replace(/</g, "\\u003c")} is:inline />
+</dialog>
+
+<script>
+  import { initLightbox } from '../scripts/lightbox';
+  initLightbox();
+</script>
+
+<style is:global>
+  .lightbox {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    max-height: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: rgba(6, 6, 7, 0.97);
+    color: var(--c-text);
+  }
+  .lightbox::backdrop { background: rgba(0, 0, 0, 0.8); }
+  .lightbox[open] { display: block; animation: lb-in 0.3s var(--ease); }
+  @keyframes lb-in { from { opacity: 0; } }
+  .lightbox__inner {
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr) auto auto;
+    gap: 16px;
+    padding: 12px var(--gutter) calc(16px + env(safe-area-inset-bottom));
+    overflow-y: auto;
+  }
+  @media (min-width: 1024px) {
+    .lightbox__inner {
+      grid-template-columns: minmax(0, 1fr) 340px;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      gap: 20px 32px;
+      padding: 20px 32px 24px;
+      overflow: hidden;
+    }
+    .lightbox__bar { grid-column: 1 / -1; }
+    .lightbox__info { grid-column: 2; grid-row: 2 / 4; align-self: center; }
+    .lightbox__stage { grid-column: 1; grid-row: 2; }
+    .lightbox__nav { grid-column: 1; grid-row: 3; }
+  }
+  .lightbox__bar { display: flex; align-items: center; justify-content: space-between; }
+  .lightbox__counter { font-size: 0.85rem; letter-spacing: 0.18em; color: var(--c-text-3); font-variant-numeric: tabular-nums; }
+  .lightbox__close,
+  .lightbox__arrow {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 1px solid var(--c-line-strong);
+    background: rgba(255, 255, 255, 0.03);
+    transition: border-color 0.2s, background-color 0.2s;
+  }
+  .lightbox__close:hover,
+  .lightbox__arrow:hover { border-color: var(--c-orange); background: var(--c-orange-soft); }
+  .lightbox__stage {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: 0;
+  }
+  .lightbox__stage .ba,
+  .lightbox__stage .lightbox__single {
+    width: 100%;
+    max-height: 100%;
+    aspect-ratio: 4 / 3;
+  }
+  @media (min-width: 1024px) {
+    .lightbox__stage .ba,
+    .lightbox__stage .lightbox__single { height: 100%; width: auto; max-width: 100%; }
+  }
+  .lightbox__single { position: relative; border-radius: var(--radius-lg); overflow: hidden; background: var(--c-surface); }
+  .lightbox__single img { width: 100%; height: 100%; object-fit: contain; background: #000; }
+  .lightbox__info { display: grid; gap: 14px; align-content: start; }
+  .lightbox__meta { display: flex; flex-wrap: wrap; gap: 8px 14px; font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-orange); }
+  .lightbox__meta span + span { color: var(--c-text-3); }
+  .lightbox__title { font-size: clamp(1.4rem, 1.2rem + 1vw, 2rem); }
+  .lightbox__desc { color: var(--c-text-2); margin: 0; }
+  .lightbox__modes { display: inline-flex; padding: 4px; border: 1px solid var(--c-line-strong); border-radius: 999px; justify-self: start; }
+  .lightbox__modes button {
+    padding: 8px 16px;
+    border: 0;
+    border-radius: 999px;
+    background: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--c-text-2);
+  }
+  .lightbox__modes button[aria-pressed='true'] { background: var(--c-orange); color: #0a0a0b; }
+  .lightbox__thumbs { display: flex; flex-wrap: wrap; gap: 8px; }
+  .lightbox__thumbs button {
+    width: 64px;
+    height: 48px;
+    padding: 0;
+    border: 1px solid var(--c-line-strong);
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--c-surface);
+  }
+  .lightbox__thumbs button[aria-pressed='true'] { border-color: var(--c-orange); box-shadow: 0 0 0 1px var(--c-orange); }
+  .lightbox__thumbs img { width: 100%; height: 100%; object-fit: cover; }
+  .lightbox__cta { justify-self: start; margin-top: 6px; }
+  .lightbox__nav { display: flex; justify-content: center; gap: 12px; }
+</style>

@@ -1,0 +1,85 @@
+---
+/** Coordonnées cliquables : téléphone, WhatsApp, e-mail, Instagram, zone d'intervention. */
+import Icon from './Icon.astro';
+import BrandIcon from './BrandIcon.astro';
+import { site } from '../lib/site';
+const towns = site.towns.filter((t) => t !== site.city);
+---
+<ul class="cmethods">
+  <li>
+    <a href={site.phoneHref} class="cmethod">
+      <span class="cmethod__icon"><Icon name="phone" /></span>
+      <span><small>Téléphone</small><strong>{site.phone}</strong></span>
+      <Icon name="arrow-up-right" class="cmethod__arrow" />
+    </a>
+  </li>
+  <li>
+    <a href={site.whatsappHref} class="cmethod" target="_blank" rel="noopener">
+      <span class="cmethod__icon cmethod__icon--wa"><BrandIcon name="whatsapp" /></span>
+      <span><small>WhatsApp</small><strong>Écrire un message</strong></span>
+      <Icon name="arrow-up-right" class="cmethod__arrow" />
+    </a>
+  </li>
+  <li>
+    <a href={site.emailHref} class="cmethod">
+      <span class="cmethod__icon"><Icon name="mail" /></span>
+      <span><small>E-mail</small><strong>{site.email}</strong></span>
+      <Icon name="arrow-up-right" class="cmethod__arrow" />
+    </a>
+  </li>
+  <li>
+    <a href={site.instagramHref} class="cmethod" target="_blank" rel="noopener">
+      <span class="cmethod__icon"><BrandIcon name="instagram" /></span>
+      <span><small>Instagram</small><strong>@{site.instagram}</strong></span>
+      <Icon name="arrow-up-right" class="cmethod__arrow" />
+    </a>
+  </li>
+</ul>
+<div class="czone">
+  <Icon name="map-pin" />
+  <div>
+    <strong>Zone d'intervention</strong>
+    <p>{site.zone}.</p>
+    {towns.length > 0 && <p class="czone__towns">Notamment : {towns.join(', ')}…</p>}
+  </div>
+</div>
+
+<style>
+  .cmethods { list-style: none; display: grid; gap: 10px; }
+  .cmethod {
+    display: grid;
+    grid-template-columns: 46px 1fr 18px;
+    gap: 16px;
+    align-items: center;
+    padding: 14px 16px;
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius-lg);
+    background: var(--c-surface);
+    transition: border-color 0.25s var(--ease), background-color 0.25s var(--ease);
+  }
+  .cmethod:hover { border-color: var(--c-orange-line); background: var(--c-surface-2); }
+  .cmethod small { display: block; font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-text-3); }
+  .cmethod strong { display: block; color: var(--c-white); font-weight: 600; word-break: break-word; line-height: 1.35; }
+  .cmethod__icon {
+    width: 46px; height: 46px; display: grid; place-items: center;
+    border-radius: 50%; background: var(--c-orange-soft); color: var(--c-orange);
+  }
+  .cmethod__icon :global(svg) { width: 20px; height: 20px; }
+  .cmethod__icon--wa { background: rgba(37, 211, 102, 0.12); color: var(--c-whatsapp); }
+  .cmethod :global(.cmethod__arrow) { width: 18px; height: 18px; color: var(--c-text-3); transition: transform 0.25s var(--ease), color 0.25s; }
+  .cmethod:hover :global(.cmethod__arrow) { color: var(--c-orange); transform: translate(2px, -2px); }
+  .czone {
+    display: grid;
+    grid-template-columns: 22px 1fr;
+    gap: 14px;
+    margin-top: 22px;
+    padding-top: 22px;
+    border-top: 1px solid var(--c-line);
+    color: var(--c-text-2);
+    font-size: 0.95rem;
+  }
+  .czone > :global(svg) { width: 22px; height: 22px; color: var(--c-orange); }
+  .czone strong { display: block; color: var(--c-white); margin-bottom: 4px; }
+  .czone p { margin: 0; line-height: 1.55; }
+  .czone__towns { margin-top: 6px !important; font-size: 0.88rem; color: var(--c-text-3); }
+</style>

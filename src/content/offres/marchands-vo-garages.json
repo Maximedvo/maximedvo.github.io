@@ -1,0 +1,88 @@
+{
+  "ordre": 1,
+  "menu": "Marchands VO & garages",
+  "cible": "Marchands VO et garages indépendants",
+  "resumeCarte": "Des véhicules d'occasion préparés et valorisés avant leur mise en vente ou leur livraison.",
+  "surtitre": "Marchands VO · Garages indépendants",
+  "titre": "La préparation esthétique de vos véhicules d'occasion, en toute simplicité.",
+  "introduction": "Je m'occupe de la préparation esthétique de vos véhicules d'occasion avant leur mise en vente ou leur livraison. Vous achetez et vendez, je rends vos véhicules présentables.",
+  "image": "",
+  "seoTitre": "Nettoyage véhicules d'occasion à Liège | FlashUp",
+  "seoDescription": "Préparation esthétique et nettoyage de véhicules d'occasion à Liège pour marchands VO et garages. Tarifs adaptés au volume : demandez votre tarif pro.",
+  "icone": "key-round",
+  "prestationsTitre": "Mes prestations pour vos véhicules d'occasion",
+  "prestations": [
+    {
+      "titre": "Nettoyage intérieur complet",
+      "description": "Un habitacle net et soigné, prêt pour les photos d'annonce et les essais.",
+      "elements": []
+    },
+    {
+      "titre": "Nettoyage extérieur",
+      "description": "Une carrosserie propre et lumineuse pour une première impression réussie.",
+      "elements": []
+    },
+    {
+      "titre": "Préparation esthétique avant mise en vente",
+      "description": "Une présentation homogène de votre stock, véhicule après véhicule.",
+      "elements": []
+    },
+    {
+      "titre": "Rénovation intérieure",
+      "description": "Pour les habitacles plus marqués : remise en valeur des éléments intérieurs.",
+      "elements": []
+    },
+    {
+      "titre": "Rénovation esthétique complète",
+      "description": "Intérieur et extérieur traités ensemble pour les véhicules qui le méritent.",
+      "elements": []
+    },
+    {
+      "titre": "Polissage et rénovation de phares",
+      "description": "Des optiques ternies retrouvent de la clarté et rajeunissent la face avant.",
+      "elements": []
+    }
+  ],
+  "avantagesTitre": "Ce que vous y gagnez",
+  "avantages": [
+    {
+      "titre": "Gain de temps",
+      "texte": "Vous vous concentrez sur l'achat et la vente, je prends en charge la préparation.",
+      "icone": "clock"
+    },
+    {
+      "titre": "Des véhicules plus attractifs",
+      "texte": "Une meilleure présentation, en annonce comme sur votre parc.",
+      "icone": "sparkles"
+    },
+    {
+      "titre": "Prestataire autonome",
+      "texte": "Je m'organise seul, sans mobiliser vos équipes.",
+      "icone": "user-check"
+    },
+    {
+      "titre": "Matériel et produits professionnels",
+      "texte": "Des équipements et des produits adaptés à chaque matériau.",
+      "icone": "wrench"
+    },
+    {
+      "titre": "Collaboration régulière possible",
+      "texte": "Interventions ponctuelles ou planifiées selon vos arrivages.",
+      "icone": "repeat"
+    },
+    {
+      "titre": "Tarifs adaptés au volume",
+      "texte": "Une tarification pensée pour le nombre de véhicules à préparer.",
+      "icone": "euro"
+    }
+  ],
+  "cta": "Demander un tarif professionnel",
+  "typeEntreprise": "marchand-vo",
+  "categoriesRealisations": [
+    "preparation-revente",
+    "nettoyage-interieur",
+    "renovation-complete",
+    "renovation-phares"
+  ],
+  "publie": true
+}

@@ -1,0 +1,86 @@
+{
+  "ordre": 2,
+  "menu": "Concessionnaires",
+  "cible": "Concessionnaires automobiles",
+  "resumeCarte": "Des véhicules neufs et d'occasion livrés impeccables, et un showroom toujours présentable.",
+  "surtitre": "Concessions automobiles",
+  "titre": "Sublimez chaque véhicule avant sa livraison.",
+  "introduction": "J'accompagne les concessions dans la préparation esthétique de leurs véhicules neufs et d'occasion, en renfort ponctuel ou de façon régulière.",
+  "image": "",
+  "seoTitre": "Préparation avant livraison pour concessionnaires | FlashUp",
+  "seoDescription": "Sous-traitant en préparation esthétique automobile pour concessions à Liège : préparation avant livraison, showroom, rénovation. Ponctuel ou régulier.",
+  "icone": "building-2",
+  "prestationsTitre": "Trois solutions pour votre concession",
+  "prestations": [
+    {
+      "titre": "Préparation avant livraison",
+      "description": "Chaque véhicule remis à votre client dans un état irréprochable.",
+      "elements": [
+        "Nettoyage intérieur",
+        "Nettoyage extérieur",
+        "Vitres",
+        "Jantes",
+        "Finitions",
+        "Contrôle visuel"
+      ]
+    },
+    {
+      "titre": "Entretien des véhicules d'exposition",
+      "description": "Un showroom qui reste impeccable, jour après jour.",
+      "elements": [
+        "Dépoussiérage",
+        "Nettoyage intérieur",
+        "Nettoyage extérieur",
+        "Présentation esthétique du showroom"
+      ]
+    },
+    {
+      "titre": "Rénovation esthétique",
+      "description": "Pour les reprises et les véhicules d'occasion à remettre en valeur.",
+      "elements": [
+        "Shampouinage",
+        "Nettoyage approfondi",
+        "Entretien du cuir",
+        "Polissage de phares",
+        "Rénovation intérieure et extérieure"
+      ]
+    }
+  ],
+  "avantagesTitre": "Un indépendant à la hauteur de votre marque",
+  "avantages": [
+    {
+      "titre": "Qualité des finitions",
+      "texte": "Un niveau d'exigence aligné sur l'image de votre concession.",
+      "icone": "award"
+    },
+    {
+      "titre": "Régularité",
+      "texte": "Un résultat constant, d'un véhicule à l'autre.",
+      "icone": "calendar-check"
+    },
+    {
+      "titre": "Flexibilité",
+      "texte": "Des interventions organisées selon vos livraisons et vos pics d'activité.",
+      "icone": "route"
+    },
+    {
+      "titre": "Sous-traitance ponctuelle ou régulière",
+      "texte": "Un renfort lors des périodes chargées ou une collaboration planifiée.",
+      "icone": "handshake"
+    },
+    {
+      "titre": "Tarification adaptée aux volumes",
+      "texte": "Des conditions établies en fonction du nombre de véhicules.",
+      "icone": "euro"
+    }
+  ],
+  "cta": "Organiser une collaboration",
+  "typeEntreprise": "concessionnaire",
+  "categoriesRealisations": [
+    "nettoyage-exterieur",
+    "nettoyage-interieur",
+    "renovation-phares",
+    "renovation-interieure"
+  ],
+  "publie": true
+}

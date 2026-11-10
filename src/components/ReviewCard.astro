@@ -1,0 +1,53 @@
+---
+/** Carte d'avis client (vrai avis Google) ou emplacement provisoire. */
+import Icon from './Icon.astro';
+import BrandIcon from './BrandIcon.astro';
+import Stars from './Stars.astro';
+import { formatDate } from '../lib/site';
+
+interface Props {
+  review?: { auteur: string; note: number; date?: Date; texte: string; lien: string; source: string };
+  clamp?: boolean;
+  quote?: boolean;
+  index?: number;
+}
+const { review, clamp = false, quote = false, index = 1 } = Astro.props;
+const initial = (name: string) => name.trim().charAt(0).toUpperCase() || '?';
+---
+{review ? (
+  <article class:list={['review', { 'review--clamp': clamp, 'review--quote': quote }]} data-feed-review data-reveal>
+    {quote && <Icon name="quote" class="review__quote" />}
+    <div class="review__top">
+      <Stars rating={review.note} />
+      <span class="review__source"><BrandIcon name="google" size={14} /> {review.source}</span>
+    </div>
+    <p class="review__text">{review.texte}</p>
+    <div class="review__author">
+      <span class="review__avatar" aria-hidden="true">{initial(review.auteur)}</span>
+      <div>
+        <div class="review__name">
+          {review.lien ? <a href={review.lien} target="_blank" rel="noopener nofollow">{review.auteur}</a> : review.auteur}
+        </div>
+        {review.date && <time class="review__date" datetime={review.date.toISOString().slice(0, 10)}>{formatDate(review.date)}</time>}
+      </div>
+    </div>
+  </article>
+) : (
+  <article class:list={['review', 'review--placeholder', { 'review--quote': quote }]} data-feed-review>
+    <div class="review__top">
+      <span class="ph-tag"><Icon name="message-square-quote" /> Emplacement provisoire</span>
+      <span class="review__source"><BrandIcon name="google" size={14} /> Google</span>
+    </div>
+    <p class="review__text muted">
+      Avis client n°{index} à intégrer : copiez un véritable avis de votre fiche Google
+      (administration › Avis clients) ou activez la synchronisation automatique.
+    </p>
+    <div class="review__author">
+      <span class="review__avatar" aria-hidden="true">?</span>
+      <div>
+        <div class="review__name">Nom du client</div>
+        <span class="review__date">Date de l'avis</span>
+      </div>
+    </div>
+  </article>
+)}

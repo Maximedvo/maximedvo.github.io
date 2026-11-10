@@ -1,0 +1,65 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import ContactForm from '../../components/ContactForm.astro';
+import ContactMethods from '../../components/ContactMethods.astro';
+
+const next = [
+  'J’étudie personnellement votre demande : activité, volume, prestations souhaitées.',
+  'Je vous recontacte pour préciser vos besoins si nécessaire.',
+  'Vous recevez une proposition adaptée, ponctuelle ou régulière.',
+];
+---
+<BaseLayout
+  title="Devis nettoyage automobile professionnel à Liège | FlashUp"
+  description="Demandez un devis pour la préparation esthétique de vos véhicules : marchands VO, garages, concessions, loueurs et flottes à Liège et environs."
+  breadcrumbs={[{ name: 'Contact & devis', path: '/contact/' }]}
+>
+  <PageHero
+    eyebrow="Contact & devis"
+    title="Demande de devis"
+    lead="Un formulaire court, une réponse rapide. Indiquez votre activité et votre volume de véhicules : je vous propose une solution adaptée."
+    crumbs={[{ name: 'Contact & devis' }]}
+    compact
+  />
+
+  <section class="section contact-page">
+    <div class="container contact-grid">
+      <div class="contact-grid__form">
+        <h2 class="sr-only">Formulaire de demande de devis</h2>
+        <ContactForm id="devis" />
+      </div>
+      <aside class="contact-grid__aside" aria-labelledby="contact-direct">
+        <h2 id="contact-direct" class="aside-title">Besoin d'une réponse immédiate ?</h2>
+        <p class="muted">Appelez-moi ou écrivez-moi directement sur WhatsApp : c'est moi qui réponds.</p>
+        <ContactMethods />
+        <div class="next">
+          <p class="aside-title aside-title--sm">Après votre demande</p>
+          <ol>
+            {next.map((n, i) => <li><span>0{i + 1}</span>{n}</li>)}
+          </ol>
+        </div>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact-page { padding-top: clamp(40px, 5vw, 64px); }
+  .contact-grid { display: grid; gap: clamp(36px, 5vw, 64px); }
+  @media (min-width: 1040px) { .contact-grid { grid-template-columns: 1.35fr 0.9fr; align-items: start; } }
+  .contact-grid__form {
+    padding: clamp(22px, 3.5vw, 44px);
+    border: 1px solid var(--c-line);
+    border-radius: 14px;
+    background: var(--c-bg-2);
+  }
+  .contact-grid__aside { display: grid; gap: 16px; align-content: start; }
+  @media (min-width: 1040px) { .contact-grid__aside { position: sticky; top: calc(var(--header-h) + 24px); } }
+  .aside-title { font-size: 1.35rem; }
+  .aside-title--sm { font-size: 1rem; margin: 0 0 14px; font-weight: 700; font-stretch: 112%; color: var(--c-white); }
+  .next { margin-top: 12px; padding: 22px; border: 1px solid var(--c-line); border-radius: var(--radius-lg); }
+  .next ol { list-style: none; display: grid; gap: 12px; }
+  .next li { display: grid; grid-template-columns: 30px 1fr; gap: 8px; color: var(--c-text-2); font-size: 0.93rem; line-height: 1.5; }
+  .next li span { color: var(--c-orange); font-weight: 600; font-size: 0.85rem; }
+</style>

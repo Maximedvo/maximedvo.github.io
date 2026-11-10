@@ -1,0 +1,233 @@
+---
+/**
+ * Page d'offre professionnelle — générée pour chaque fichier de src/content/offres/.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import Icon from '../../components/Icon.astro';
+import BrandIcon from '../../components/BrandIcon.astro';
+import RealisationCard from '../../components/RealisationCard.astro';
+import RealisationLightbox from '../../components/RealisationLightbox.astro';
+import ReviewsBlock from '../../components/ReviewsBlock.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { getOffres, offreUrl } from '../../lib/offres';
+import { getRealisations, withPlaceholders } from '../../lib/realisations';
+import { resolveImage } from '../../lib/images';
+import { site } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const offres = await getOffres();
+  return offres.map((offre) => ({ params: { slug: offre.id }, props: { offre } }));
+}
+
+const { offre } = Astro.props;
+const o = offre.data;
+const image = resolveImage(o.image);
+const contactHref = `/contact/${o.typeEntreprise ? `?type=${o.typeEntreprise}` : ''}`;
+const detailed = o.prestations.some((p) => p.elements.length > 0);
+const letters = 'ABCDEFGHIJ';
+
+const cats = o.categoriesRealisations;
+const related = withPlaceholders(
+  (await getRealisations()).filter((r) => !cats.length || cats.includes(r.categorie)).slice(0, 3),
+  cats,
+  3,
+);
+
+const others = (await getOffres()).filter((x) => x.id !== offre.id);
+
+const serviceLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: o.titre.replace(/\.$/, ''),
+  serviceType: `Préparation esthétique automobile — ${o.cible}`,
+  description: o.introduction,
+  provider: { '@id': `${site.url}/#entreprise` },
+  areaServed: { '@type': 'City', name: site.city },
+  audience: { '@type': 'BusinessAudience', name: o.cible },
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: o.prestationsTitre,
+    itemListElement: o.prestations.map((p) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: p.titre } })),
+  },
+};
+---
+<BaseLayout
+  title={o.seoTitre}
+  description={o.seoDescription}
+  breadcrumbs={[{ name: o.menu, path: offreUrl(offre.id) }]}
+  jsonLd={[serviceLd]}
+>
+  <PageHero eyebrow={o.surtitre} title={o.titre} lead={o.introduction} crumbs={[{ name: 'Solutions', path: '/#solutions' }, { name: o.menu }]} image={image} imageAlt={o.cible}>
+    <div class="btn-row btn-row--stack hero-actions">
+      <a href={contactHref} class="btn btn--primary btn--lg">{o.cta} <Icon name="arrow-right" /></a>
+      <a href={site.whatsappHref} class="btn btn--ghost btn--lg btn--whatsapp" target="_blank" rel="noopener"><BrandIcon name="whatsapp" /> Échanger sur WhatsApp</a>
+    </div>
+  </PageHero>
+
+  <!-- Prestations -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow"><span class="eyebrow__num">01</span> Prestations</p>
+        <h2>{o.prestationsTitre}</h2>
+      </div>
+      <div class:list={['offers', { 'offers--detailed': detailed }]}>
+        {o.prestations.map((p, i) => (
+          <article class="offer card card--hover" data-reveal>
+            <div class="offer__head">
+              <span class="offer__letter">{detailed ? letters[i] : `0${i + 1}`}</span>
+              <h3>{p.titre}</h3>
+            </div>
+            {p.description && <p class="offer__desc">{p.description}</p>}
+            {p.elements.length > 0 && (
+              <ul class="check-list">
+                {p.elements.map((el) => <li><Icon name="check" strokeWidth={2.2} />{el}</li>)}
+              </ul>
+            )}
+          </article>
+        ))}
+      </div>
+      <p class="offers-note" data-reveal>
+        <Icon name="info" /> Je réalise moi-même chaque intervention, sur devis, selon l'état des véhicules et le volume à traiter.
+      </p>
+    </div>
+  </section>
+
+  <!-- Avantages -->
+  <section class="section section--alt">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow"><span class="eyebrow__num">02</span> Avantages</p>
+        <h2>{o.avantagesTitre}</h2>
+      </div>
+      <div class="advantages" data-reveal>
+        {o.avantages.map((a) => (
+          <div class="advantage">
+            <span class="icon-box"><Icon name={a.icone} /></span>
+            <h3>{a.titre}</h3>
+            {a.texte && <p>{a.texte}</p>}
+          </div>
+        ))}
+      </div>
+      <div class="mid-cta" data-reveal>
+        <a href={contactHref} class="btn btn--primary btn--lg">{o.cta} <Icon name="arrow-right" /></a>
+        <a href={site.phoneHref} class="btn btn--ghost btn--lg"><Icon name="phone" /> {site.phone}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Réalisations liées -->
+  {related.length > 0 && (
+    <section class="section">
+      <div class="container">
+        <div class="section-head section-head--split" data-reveal>
+          <div>
+            <p class="eyebrow"><span class="eyebrow__num">03</span> Réalisations</p>
+            <h2>Des résultats concrets.</h2>
+          </div>
+          <a href={`/realisations/${cats[0] ? `?categorie=${cats[0]}` : ''}`} class="btn btn--ghost">Voir les réalisations <Icon name="arrow-right" /></a>
+        </div>
+        <div class="rgrid">
+          {related.map((r) => <RealisationCard item={r} />)}
+        </div>
+      </div>
+      <RealisationLightbox items={related} />
+    </section>
+  )}
+
+  <!-- Avis -->
+  <section class="section section--alt">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow"><span class="eyebrow__num">04</span> Avis de mes clients</p>
+        <h2>Ils en parlent mieux que moi.</h2>
+      </div>
+      <ReviewsBlock limit={3} clamp />
+    </div>
+  </section>
+
+  <CtaBand title={`${o.cta} : parlons de votre volume.`} cta={o.cta} href={contactHref} />
+
+  <!-- Autres offres -->
+  {others.length > 0 && (
+    <section class="section section--tight other-offers">
+      <div class="container">
+        <p class="eyebrow">Autres solutions</p>
+        <div class="other-offers__list">
+          {others.map((x) => (
+            <a href={offreUrl(x.id)} class="other-offer">
+              <span class="icon-box"><Icon name={x.data.icone} /></span>
+              <span>
+                <strong>{x.data.cible}</strong>
+                <small>{x.data.resumeCarte}</small>
+              </span>
+              <Icon name="arrow-right" class="other-offer__arrow" />
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+</BaseLayout>
+
+<style>
+  .hero-actions { margin-top: 8px; }
+  .offers { display: grid; gap: clamp(16px, 2vw, 24px); }
+  @media (min-width: 720px) { .offers { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1080px) { .offers { grid-template-columns: repeat(3, 1fr); } }
+  .offer { display: grid; gap: 16px; align-content: start; padding: clamp(24px, 3vw, 32px); }
+  .offer__head { display: grid; gap: 14px; }
+  .offers:not(.offers--detailed) .offer__head { grid-template-columns: 44px 1fr; align-items: center; }
+  .offers:not(.offers--detailed) .offer { gap: 12px; }
+  .offer__letter {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    border: 1px solid rgba(240, 118, 12, 0.35);
+    background: var(--c-orange-soft);
+    color: var(--c-orange);
+    font-weight: 700;
+    font-size: 0.95rem;
+    font-stretch: 112%;
+  }
+  .offers--detailed .offer__letter { font-size: 1.15rem; }
+  .offer__desc { color: var(--c-text-2); font-size: 0.97rem; }
+  .offers--detailed .offer { padding-bottom: clamp(26px, 3vw, 34px); }
+  .offers--detailed .check-list { padding-top: 16px; border-top: 1px solid var(--c-line); }
+  .offers-note {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-top: 28px;
+    font-size: 0.92rem;
+    color: var(--c-text-3);
+  }
+  .offers-note :global(svg) { width: 18px; height: 18px; color: var(--c-orange); flex: none; margin-top: 2px; }
+  .mid-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: clamp(32px, 4vw, 48px); }
+  @media (max-width: 520px) { .mid-cta .btn { width: 100%; } }
+  .rgrid { display: grid; gap: clamp(16px, 2vw, 24px); }
+  @media (min-width: 700px) { .rgrid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1100px) { .rgrid { grid-template-columns: repeat(3, 1fr); } }
+  .other-offers { border-top: 1px solid var(--c-line); }
+  .other-offers__list { display: grid; gap: 12px; }
+  @media (min-width: 860px) { .other-offers__list { grid-template-columns: 1fr 1fr; } }
+  .other-offer {
+    display: grid;
+    grid-template-columns: 48px 1fr 20px;
+    gap: 16px;
+    align-items: center;
+    padding: 18px 20px;
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius-lg);
+    background: var(--c-surface);
+    transition: border-color 0.25s var(--ease), background-color 0.25s;
+  }
+  .other-offer:hover { border-color: var(--c-orange-line); background: var(--c-surface-2); }
+  .other-offer strong { display: block; color: var(--c-white); line-height: 1.3; }
+  .other-offer small { display: block; color: var(--c-text-3); font-size: 0.85rem; line-height: 1.4; margin-top: 2px; }
+  .other-offer :global(.other-offer__arrow) { width: 20px; height: 20px; color: var(--c-orange); transition: transform 0.25s var(--ease); }
+  .other-offer:hover :global(.other-offer__arrow) { transform: translateX(4px); }
+</style>

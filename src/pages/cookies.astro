@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { site } from '../lib/site';
+const hasGA = Boolean(site.analytics.ga4);
+---
+<BaseLayout
+  title="Politique cookies — FlashUp"
+  description="Les cookies utilisés sur flashup-pro.be et la manière de gérer vos préférences."
+  breadcrumbs={[{ name: 'Politique cookies', path: '/cookies/' }]}
+>
+  <PageHero eyebrow="Vie privée" title="Politique cookies" crumbs={[{ name: 'Cookies' }]} compact />
+  <section class="section">
+    <div class="container">
+      <div class="prose">
+        <p><em>Dernière mise à jour : 9 novembre 2026.</em></p>
+        <p>Un cookie est un petit fichier déposé sur votre appareil lors de la visite d'un site. Conformément à la réglementation belge et européenne, les cookies non essentiels ne sont déposés qu'avec votre consentement préalable, que vous pouvez refuser aussi facilement qu'accepter et retirer à tout moment.</p>
+
+        {!hasGA && (
+          <p><strong>Actuellement, ce site n'utilise aucun cookie de mesure d'audience ni aucun cookie publicitaire.</strong> Seul un stockage strictement nécessaire peut être utilisé.</p>
+        )}
+
+        <h2>Cookies et stockages utilisés</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Nom</th><th>Finalité</th><th>Type</th><th>Durée</th></tr></thead>
+            <tbody>
+              <tr><td>flashup-consent</td><td>Mémoriser vos choix en matière de cookies</td><td>Essentiel (stockage local)</td><td>6 mois</td></tr>
+              {hasGA && <tr><td>_ga</td><td>Google Analytics 4 : distinguer les visiteurs de façon anonyme</td><td>Mesure d'audience (avec consentement)</td><td>2 ans</td></tr>}
+              {hasGA && <tr><td>_ga_&lt;ID&gt;</td><td>Google Analytics 4 : conserver l'état de la session</td><td>Mesure d'audience (avec consentement)</td><td>2 ans</td></tr>}
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Liens vers des services tiers</h2>
+        <p>Les boutons WhatsApp, Instagram et Google (avis) sont de simples liens : aucun contenu de ces services n'est chargé sur notre site tant que vous ne cliquez pas dessus. Une fois sur ces services, leurs propres politiques s'appliquent.</p>
+
+        <h2>Gérer vos préférences</h2>
+        {hasGA ? (
+          <p>Vous pouvez modifier votre choix à tout moment : <button type="button" class="btn btn--ghost btn--sm" data-consent-open>Gérer les cookies</button></p>
+        ) : (
+          <p>Aucun réglage n'est nécessaire tant qu'aucun outil de mesure d'audience n'est activé.</p>
+        )}
+        <p>Vous pouvez également supprimer ou bloquer les cookies depuis les paramètres de votre navigateur.</p>
+
+        <h2>Contact</h2>
+        <p>Pour toute question : <a href={site.emailHref}>{site.email}</a>. Voir aussi notre <a href="/confidentialite/">politique de confidentialité</a>.</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import ReviewsBlock from '../components/ReviewsBlock.astro';
+import CtaBand from '../components/CtaBand.astro';
+---
+<BaseLayout
+  title="Avis clients Google | FlashUp, detailing pro à Liège"
+  description="Les avis Google de mes clients sur FlashUp, préparateur esthétique automobile indépendant à Liège."
+  breadcrumbs={[{ name: 'Avis clients', path: '/avis/' }]}
+>
+  <PageHero
+    eyebrow="Avis clients"
+    title="La parole à mes clients"
+    lead="Des avis authentiques, publiés sur ma fiche Google par mes clients — des particuliers jusqu'ici. La même exigence s'applique à vos véhicules professionnels."
+    crumbs={[{ name: 'Avis clients' }]}
+    compact
+  />
+  <section class="section">
+    <div class="container">
+      <ReviewsBlock />
+    </div>
+  </section>
+  <CtaBand title="Vous aussi, confiez-moi vos véhicules." />
+</BaseLayout>

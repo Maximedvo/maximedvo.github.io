@@ -1,0 +1,50 @@
+---
+import BrandIcon from './BrandIcon.astro';
+import { site } from '../lib/site';
+---
+<a
+  href={site.whatsappHref}
+  class="wa-fab"
+  target="_blank"
+  rel="noopener"
+  aria-label="Contacter FlashUp sur WhatsApp"
+  data-wa-fab
+>
+  <BrandIcon name="whatsapp" size={28} />
+  <span class="wa-fab__label">Discuter sur WhatsApp</span>
+</a>
+
+<style>
+  .wa-fab {
+    position: fixed;
+    right: max(16px, env(safe-area-inset-right));
+    bottom: max(16px, env(safe-area-inset-bottom));
+    z-index: 90;
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    height: 58px;
+    min-width: 58px;
+    padding: 0 15px;
+    border-radius: 999px;
+    background: var(--c-whatsapp);
+    color: #fff;
+    box-shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+    transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease), opacity 0.3s, visibility 0.3s;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .wa-fab__label {
+    max-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: max-width 0.4s var(--ease), margin 0.4s var(--ease);
+  }
+  .wa-fab:hover { transform: translateY(-2px); box-shadow: 0 14px 34px -8px rgba(37, 211, 102, 0.55); }
+  @media (hover: hover) and (min-width: 768px) {
+    .wa-fab:hover .wa-fab__label,
+    .wa-fab:focus-visible .wa-fab__label { max-width: 220px; margin-left: 10px; }
+  }
+  :global(body.consent-open) .wa-fab,
+  :global(body.menu-open) .wa-fab { opacity: 0; visibility: hidden; }
+</style>

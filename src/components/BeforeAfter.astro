@@ -1,0 +1,80 @@
+---
+/**
+ * Comparateur avant / après interactif (souris, tactile et clavier).
+ * Si une photo manque, un emplacement provisoire clairement identifié est affiché.
+ */
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+
+interface Props {
+  before?: ImageMetadata;
+  after?: ImageMetadata;
+  altBefore: string;
+  altAfter: string;
+  wide?: boolean;
+  eager?: boolean;
+  sizes?: string;
+  label?: string;
+}
+
+const {
+  before,
+  after,
+  altBefore,
+  altAfter,
+  wide = false,
+  eager = false,
+  sizes = '(min-width: 1100px) 400px, (min-width: 700px) 50vw, 100vw',
+  label = 'Comparer avant et après',
+} = Astro.props;
+
+const widths = wide ? [640, 960, 1280, 1600] : [400, 640, 900, 1200];
+const loading = eager ? 'eager' : 'lazy';
+---
+<div class:list={['ba', { 'ba--wide': wide }]} data-ba>
+  <div class="ba__layer ba__layer--before">
+    {before ? (
+      <Image src={before} alt={altBefore} widths={widths} sizes={sizes} format="webp" quality={78} loading={loading} draggable="false" />
+    ) : (
+      <div class="placeholder-media" role="img" aria-label="Emplacement provisoire : photo avant à fournir">
+        <Icon name="image" class="placeholder-media__icon" />
+        <span class="placeholder-media__title">Photo avant</span>
+        <span class="placeholder-media__note">Emplacement provisoire — photo à fournir</span>
+      </div>
+    )}
+  </div>
+  <div class="ba__layer ba__layer--after">
+    {after ? (
+      <Image src={after} alt={altAfter} widths={widths} sizes={sizes} format="webp" quality={78} loading={loading} draggable="false" />
+    ) : (
+      <div class="placeholder-media placeholder-media--after" role="img" aria-label="Emplacement provisoire : photo après à fournir">
+        <Icon name="sparkles" class="placeholder-media__icon" />
+        <span class="placeholder-media__title">Photo après</span>
+        <span class="placeholder-media__note">Emplacement provisoire — photo à fournir</span>
+      </div>
+    )}
+  </div>
+  <span class="ba__tag ba__tag--before" aria-hidden="true">Avant</span>
+  <span class="ba__tag ba__tag--after" aria-hidden="true">Après</span>
+  <div class="ba__divider">
+    <div
+      class="ba__handle"
+      role="slider"
+      tabindex="0"
+      aria-label={label}
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-valuenow="50"
+      aria-valuetext="50 % de la photo après visible"
+      data-ba-handle
+    >
+      <Icon name="move-horizontal" strokeWidth={2.2} />
+    </div>
+  </div>
+</div>
+
+<script>
+  import { initBeforeAfter } from '../scripts/before-after';
+  document.querySelectorAll<HTMLElement>('[data-ba]').forEach(initBeforeAfter);
+</script>

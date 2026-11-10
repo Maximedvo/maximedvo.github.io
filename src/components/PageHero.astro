@@ -1,0 +1,88 @@
+---
+/** En-tête des pages intérieures : fil d'Ariane, surtitre, H1, introduction, actions. */
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import silhouette from '../assets/brand/silhouette-flashup.png';
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  lead?: string;
+  crumbs?: { name: string; path?: string }[];
+  image?: ImageMetadata;
+  imageAlt?: string;
+  compact?: boolean;
+}
+const { eyebrow, title, lead, crumbs = [], image, imageAlt = '', compact = false } = Astro.props;
+---
+<section class:list={['page-hero', { 'page-hero--image': image, 'page-hero--compact': compact }]}>
+  {image ? (
+    <div class="page-hero__media">
+      <Image src={image} alt={imageAlt} widths={[768, 1280, 1920]} sizes="100vw" format="webp" quality={75} loading="eager" fetchpriority="high" />
+    </div>
+  ) : (
+    <div class="page-hero__art" aria-hidden="true">
+      <Image src={silhouette} alt="" widths={[640, 1100]} sizes="(min-width: 1024px) 55vw, 90vw" format="webp" loading="eager" />
+    </div>
+  )}
+  <div class="container page-hero__inner">
+    {crumbs.length > 0 && (
+      <nav class="crumbs" aria-label="Fil d'Ariane">
+        <ol>
+          <li><a href="/">Accueil</a></li>
+          {crumbs.map((c) => (
+            <li>
+              <Icon name="chevron-right" size={14} />
+              {c.path ? <a href={c.path}>{c.name}</a> : <span aria-current="page">{c.name}</span>}
+            </li>
+          ))}
+        </ol>
+      </nav>
+    )}
+    <p class="eyebrow">{eyebrow}</p>
+    <h1>{title}</h1>
+    {lead && <p class="lead">{lead}</p>}
+    <slot />
+  </div>
+</section>
+
+<style>
+  .page-hero {
+    position: relative;
+    overflow: hidden;
+    padding-top: calc(var(--header-h) + clamp(48px, 8vw, 104px));
+    padding-bottom: clamp(56px, 8vw, 104px);
+    background:
+      radial-gradient(70% 90% at 85% 10%, rgba(240, 118, 12, 0.13), transparent 60%),
+      var(--c-bg);
+    border-bottom: 1px solid var(--c-line);
+  }
+  .page-hero--compact { padding-bottom: clamp(40px, 5vw, 64px); }
+  .page-hero__inner { position: relative; z-index: 2; display: grid; gap: 22px; justify-items: start; }
+  .page-hero__inner h1 { max-width: 18ch; }
+  .page-hero__inner .eyebrow { margin-bottom: 0; }
+  .page-hero__art {
+    position: absolute;
+    right: -6%;
+    bottom: 6%;
+    width: min(62vw, 980px);
+    opacity: 0.18;
+    pointer-events: none;
+  }
+  @media (max-width: 760px) { .page-hero__art { width: 120vw; right: -40%; bottom: 2%; opacity: 0.12; } }
+  .page-hero__media { position: absolute; inset: 0; }
+  .page-hero__media img { width: 100%; height: 100%; object-fit: cover; }
+  .page-hero__media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, rgba(10, 10, 11, 0.94) 0%, rgba(10, 10, 11, 0.75) 45%, rgba(10, 10, 11, 0.35) 100%),
+      linear-gradient(0deg, var(--c-bg) 0%, transparent 35%);
+  }
+  .crumbs ol { list-style: none; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 0.85rem; color: var(--c-text-3); }
+  .crumbs li { display: inline-flex; align-items: center; gap: 6px; }
+  .crumbs a:hover { color: var(--c-orange); }
+  .crumbs [aria-current] { color: var(--c-text-2); }
+</style>

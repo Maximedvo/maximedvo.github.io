@@ -1,0 +1,151 @@
+---
+/**
+ * Formulaire de demande de devis — Netlify Forms.
+ * Les demandes sont enregistrées dans Netlify et envoyées par e-mail
+ * (notification à configurer une fois dans Netlify, voir GUIDE.md).
+ * Anti-spam : champ piège (honeypot) + filtre anti-spam Netlify.
+ */
+import Icon from './Icon.astro';
+import BrandIcon from './BrandIcon.astro';
+import { site } from '../lib/site';
+
+interface Props { id?: string; }
+const { id = 'devis' } = Astro.props;
+
+const BUSINESS_TYPES = [
+  { key: 'marchand-vo', label: 'Marchand VO' },
+  { key: 'garage-independant', label: 'Garage indépendant' },
+  { key: 'concessionnaire', label: 'Concessionnaire' },
+  { key: 'societe-location', label: 'Société de location' },
+  { key: 'gestionnaire-flotte', label: 'Gestionnaire de flotte' },
+  { key: 'autre', label: 'Autre' },
+];
+const VOLUMES = ['1 à 5', '5 à 10', '10 à 20', '20 à 50', 'Plus de 50'];
+const SERVICES = [
+  'Nettoyage intérieur',
+  'Nettoyage extérieur',
+  'Préparation avant vente / livraison',
+  'Rénovation intérieure',
+  'Rénovation esthétique complète',
+  'Rénovation de phares',
+  'Entretien véhicules d’exposition',
+  'Nettoyage entre deux locations',
+  'Autre',
+];
+const FREQUENCIES = ['Ponctuelle', 'Hebdomadaire', 'Plusieurs fois par semaine', 'Mensuelle', 'À définir ensemble'];
+---
+<div class="contact-form" data-contact-form-wrap>
+  <form
+    id={id}
+    name="devis"
+    method="POST"
+    action="/contact/merci/"
+    data-netlify="true"
+    netlify-honeypot="adresse-web"
+    class="form"
+    data-contact-form
+  >
+    <input type="hidden" name="form-name" value="devis" />
+    <input type="hidden" name="page" value="" data-page-field />
+    <p class="hp-field" aria-hidden="true">
+      <label>Ne pas remplir ce champ <input name="adresse-web" tabindex="-1" autocomplete="off" /></label>
+    </p>
+
+    <fieldset>
+      <legend class="form__legend">Votre entreprise</legend>
+      <div class="form__grid form__grid--2">
+        <div class="field">
+          <label for={`${id}-entreprise`}>Nom de l'entreprise<span class="req" aria-hidden="true">*</span></label>
+          <input class="input" id={`${id}-entreprise`} name="entreprise" type="text" autocomplete="organization" required maxlength="120" data-error="Indiquez le nom de votre entreprise." />
+        </div>
+        <div class="field">
+          <label for={`${id}-contact`}>Nom et prénom<span class="req" aria-hidden="true">*</span></label>
+          <input class="input" id={`${id}-contact`} name="contact" type="text" autocomplete="name" required maxlength="120" data-error="Indiquez votre nom et votre prénom." />
+        </div>
+        <div class="field">
+          <label for={`${id}-telephone`}>Téléphone<span class="req" aria-hidden="true">*</span></label>
+          <input class="input" id={`${id}-telephone`} name="telephone" type="tel" autocomplete="tel" inputmode="tel" required pattern="[\d\s\+\(\)\.\/\-]{8,20}" placeholder="04xx xx xx xx" data-error="Indiquez un numéro de téléphone valide." />
+        </div>
+        <div class="field">
+          <label for={`${id}-email`}>Adresse e-mail<span class="req" aria-hidden="true">*</span></label>
+          <input class="input" id={`${id}-email`} name="email" type="email" autocomplete="email" required maxlength="160" placeholder="nom@entreprise.be" data-error="Indiquez une adresse e-mail valide." />
+        </div>
+        <div class="field">
+          <label for={`${id}-type`}>Type d'entreprise<span class="req" aria-hidden="true">*</span></label>
+          <select class="select" id={`${id}-type`} name="type-entreprise" required data-error="Sélectionnez votre type d'entreprise." data-type-select>
+            <option value="">Sélectionnez…</option>
+            {BUSINESS_TYPES.map((t) => <option value={t.label} data-key={t.key}>{t.label}</option>)}
+          </select>
+        </div>
+        <div class="field">
+          <label for={`${id}-volume`}>Véhicules par mois <span class="opt">(approximatif)</span></label>
+          <select class="select" id={`${id}-volume`} name="vehicules-par-mois">
+            <option value="">Sélectionnez…</option>
+            {VOLUMES.map((v) => <option value={v}>{v}</option>)}
+          </select>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend class="form__legend">Votre besoin</legend>
+      <div class="form__grid">
+        <div class="field">
+          <span class="field__label" id={`${id}-prestations-label`}>Prestations recherchées <span class="opt">(plusieurs choix possibles)</span></span>
+          <div class="choices" role="group" aria-labelledby={`${id}-prestations-label`}>
+            {SERVICES.map((s) => (
+              <label class="choice"><input type="checkbox" name="prestations" value={s} /><span>{s}</span></label>
+            ))}
+          </div>
+        </div>
+        <div class="form__grid form__grid--2">
+          <div class="field">
+            <label for={`${id}-frequence`}>Fréquence souhaitée</label>
+            <select class="select" id={`${id}-frequence`} name="frequence">
+              <option value="">Sélectionnez…</option>
+              {FREQUENCIES.map((f) => <option value={f}>{f}</option>)}
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for={`${id}-message`}>Message complémentaire <span class="opt">(facultatif)</span></label>
+          <textarea class="textarea" id={`${id}-message`} name="message" rows="4" maxlength="3000" placeholder="Type de véhicules, contraintes, délais, lieu d'intervention…"></textarea>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="form__foot">
+      <div class="alert alert--error" role="alert" data-form-error hidden>
+        <Icon name="triangle-alert" />
+        <div>
+          L'envoi n'a pas abouti. Réessayez dans un instant ou contactez-moi directement :
+          <a href={site.phoneHref}>{site.phone}</a>, <a href={site.whatsappHref} target="_blank" rel="noopener">WhatsApp</a>
+          ou <a href={site.emailHref}>{site.email}</a>.
+        </div>
+      </div>
+      <button type="submit" class="btn btn--primary btn--lg btn--block" data-submit>
+        <span data-submit-label>Envoyer ma demande</span>
+        <Icon name="send" />
+      </button>
+      <p class="form__privacy">
+        Champs marqués d'un <span class="text-orange">*</span> obligatoires. Vos données servent uniquement à traiter votre demande —
+        <a href="/confidentialite/">politique de confidentialité</a>.
+      </p>
+    </div>
+  </form>
+
+  <div class="form-success" data-form-success tabindex="-1" hidden>
+    <span class="form-success__icon"><Icon name="circle-check" /></span>
+    <h3>Merci, votre demande a bien été envoyée.</h3>
+    <p>Je l'étudie personnellement et je reviens vers vous rapidement avec une proposition adaptée à votre activité. Pour toute urgence, appelez-moi ou écrivez-moi sur WhatsApp.</p>
+    <div class="btn-row">
+      <a href={site.phoneHref} class="btn btn--ghost"><Icon name="phone" /> {site.phone}</a>
+      <a href={site.whatsappHref} class="btn btn--ghost btn--whatsapp" target="_blank" rel="noopener"><BrandIcon name="whatsapp" /> WhatsApp</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { initContactForms } from '../scripts/contact-form';
+  initContactForms();
+</script>
