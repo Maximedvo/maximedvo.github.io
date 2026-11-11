@@ -6,7 +6,7 @@
   "apres": "/src/assets/uploads/realisations/IMG_7176.webp",
   "avant": "/src/assets/uploads/realisations/IMG_7175.webp",
   "photos": [],
-  "miseEnAvant": false,
+  "miseEnAvant": true,
   "date": "",
   "publie": true
 }
