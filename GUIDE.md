@@ -2,8 +2,8 @@
 
 Site professionnel de FlashUp (préparation esthétique automobile, Liège).
 
-- **Adresse actuelle** : https://maximedvo.github.io (en attendant le domaine flashup-pro.be)
-- **Administration** : https://maximedvo.github.io/admin/
+- **Adresse du site** : https://flashup-pro.be (l'ancienne adresse maximedvo.github.io y redirige automatiquement)
+- **Administration** : https://flashup-pro.be/admin/
 - **Hébergement** : GitHub Pages, gratuit, avec ton compte GitHub (dépôt `Maximedvo/maximedvo.github.io`)
 
 Le site est pensé pour les visiteurs qui arrivent en **scannant le QR code du flyer** (sur mobile, en priorité).
@@ -20,7 +20,7 @@ L'administration utilise un **jeton GitHub** : une sorte de clé personnelle, à
 2. **Expiration** : choisis **No expiration**.
 3. Descends tout en bas et clique **Generate token**.
 4. Copie le code qui commence par `ghp_…`. Garde-le pour toi : ne l'envoie à personne.
-5. Va sur **https://maximedvo.github.io/admin/**, clique **Se connecter avec un jeton d'accès**, colle le code et valide.
+5. Va sur **https://flashup-pro.be/admin/**, clique **Se connecter avec un jeton d'accès**, colle le code et valide.
 
 Tu restes connecté sur cet appareil. **Sur ton téléphone** : une fois connecté sur l'ordinateur, le menu de ton profil
 (en haut à droite) propose « Se connecter avec un mobile » : un QR code s'affiche, tu le scannes et c'est fait.
@@ -77,15 +77,14 @@ Les éléments manquants s'affichent dans des **cadres orange « Emplacement pro
 
 ---
 
-## 5. Brancher le domaine flashup-pro.be (quand il est acheté)
+## 5. Domaine flashup-pro.be (déjà branché, pour mémoire)
 
 1. Sur GitHub : dépôt **maximedvo.github.io › Settings › Pages › Custom domain** : `flashup-pro.be` › **Save**.
 2. Chez ton registrar (là où le domaine est acheté), ajoute ces enregistrements DNS :
    - 4 enregistrements **A** pour `flashup-pro.be` : `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
    - 1 enregistrement **CNAME** pour `www` : `maximedvo.github.io`
 3. Une fois le domaine validé, coche **Enforce HTTPS** dans la même page GitHub.
-4. Demande à Claude de remplacer l'adresse `maximedvo.github.io` par `flashup-pro.be` dans l'administration (`public/admin/config.yml`).
-   Le reste du site s'adapte automatiquement.
+4. L'adresse `https://flashup-pro.be` est indiquée dans `astro.config.mjs`, `.github/workflows/deploy.yml` et `public/admin/config.yml`.
 
 **QR code du flyer** : fais-le pointer vers l'adresse finale, avec `?utm_source=flyer&utm_medium=qrcode` à la fin
 pour compter les visites venues du flyer dans Google Analytics.

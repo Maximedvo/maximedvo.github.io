@@ -15,8 +15,8 @@ backend:
     uploadMedia: "Ajout image {{path}}"
     deleteMedia: "Suppression image {{path}}"
 
-site_url: https://maximedvo.github.io
-display_url: https://maximedvo.github.io
+site_url: https://flashup-pro.be
+display_url: https://flashup-pro.be
 logo:
   src: /icon-192.png
 

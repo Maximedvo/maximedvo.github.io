@@ -2,9 +2,8 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
-// Adresse publique du site. Sur GitHub, elle est fournie automatiquement par le déploiement
-// (https://maximedvo.github.io aujourd'hui, https://flashup-pro.be une fois le domaine branché).
-const SITE_URL = process.env.SITE_URL || 'https://maximedvo.github.io';
+// Adresse publique du site (domaine branché sur GitHub Pages).
+const SITE_URL = process.env.SITE_URL || 'https://flashup-pro.be';
 
 export default defineConfig({
   site: SITE_URL,
