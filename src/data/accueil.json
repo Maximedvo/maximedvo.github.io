@@ -2,8 +2,8 @@
   "presentation": {
     "surtitre": "Préparateur esthétique automobile · {ville}",
     "titre": "Un indépendant motivé pour préparer vos véhicules.",
-    "texte": "Je suis seul derrière FlashUp : c'est moi qui vous réponds, moi qui prépare vos véhicules et moi qui contrôle le résultat. Un seul interlocuteur, et le soin du détail de quelqu'un qui construit sa réputation véhicule après véhicule.",
-    "sousNom": "Fondateur de FlashUp · Indépendant"
+    "texte": "Je mets mon savoir-faire et mon souci du détail au service des professionnels de l’automobile. Mon objectif : vous offrir un service de confiance, un travail soigné et des véhicules toujours présentés sous leur meilleur jour.",
+    "sousNom": ""
   },
   "entreprise": {
     "surtitre": "FlashUp, mon entreprise",
@@ -11,10 +11,26 @@
     "texte1": "J'ai lancé FlashUp il y a {experience}. Jusqu'ici, je travaillais uniquement pour des particuliers : nettoyage intérieur et extérieur, rénovation, phares… Avec, à chaque fois, le même objectif : rendre un véhicule dont son propriétaire est fier.",
     "texte2": "Aujourd'hui, j'ouvre FlashUp aux professionnels de l'automobile : marchands VO, garages, concessions, loueurs et gestionnaires de flottes. Même exigence, même motivation, avec l'organisation et la régularité qu'attend un pro.",
     "points": [
-      { "icone": "user-check", "titre": "Un seul interlocuteur : moi", "texte": "Du premier appel à la facture, vous savez toujours à qui vous parlez." },
-      { "icone": "zap", "titre": "Motivé et réactif", "texte": "Je développe FlashUp client après client : chaque véhicule compte." },
-      { "icone": "sparkles", "titre": "Le souci du détail", "texte": "La même exigence que pour mes clients particuliers, sur chaque véhicule." },
-      { "icone": "route", "titre": "Flexible", "texte": "Ponctuel ou régulier, je m’adapte à votre rythme, à {ville} et dans un rayon d’environ 50 km." }
+      {
+        "icone": "user-check",
+        "titre": "Un seul interlocuteur : moi",
+        "texte": "Du premier appel à la facture, vous savez toujours à qui vous parlez."
+      },
+      {
+        "icone": "zap",
+        "titre": "Motivé et réactif",
+        "texte": "Je développe FlashUp client après client : chaque véhicule compte."
+      },
+      {
+        "icone": "sparkles",
+        "titre": "Le souci du détail",
+        "texte": "La même exigence que pour mes clients particuliers, sur chaque véhicule."
+      },
+      {
+        "icone": "route",
+        "titre": "Flexible",
+        "texte": "Ponctuel ou régulier, je m’adapte à votre rythme, à {ville} et dans un rayon d’environ 50 km."
+      }
     ]
   },
   "travail": {
