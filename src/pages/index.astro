@@ -19,6 +19,7 @@ import { site, formatRating } from '../lib/site';
 import { resolveImage } from '../lib/images';
 import { getOffres, offreUrl } from '../lib/offres';
 import { getRealisations, withPlaceholders, type Realisation } from '../lib/realisations';
+import { accueil } from '../lib/accueil';
 
 const portrait = resolveImage(site.portrait);
 const name = site.firstName;
@@ -53,12 +54,9 @@ const feed: FeedItem[] = [];
   }
 }
 
-const points = [
-  { icon: 'user-check', title: 'Un seul interlocuteur : moi', text: 'Du premier appel à la facture, vous savez toujours à qui vous parlez.' },
-  { icon: 'zap', title: 'Motivé et réactif', text: 'Je développe FlashUp client après client : chaque véhicule compte.' },
-  { icon: 'sparkles', title: 'Le souci du détail', text: 'La même exigence que pour mes clients particuliers, sur chaque véhicule.' },
-  { icon: 'route', title: 'Flexible', text: 'Ponctuel ou régulier, je m’adapte à votre rythme, à Liège et dans un rayon d’environ 50 km.' },
-];
+// Textes modifiables dans l'administration (« Textes de l'accueil »)
+const { presentation: t1, entreprise: t2, travail: t3, solutions: t4, contact: t5 } = accueil;
+const points = t2.points;
 
 const { rating, count, reviewsUrl, live } = site.google;
 ---
@@ -100,23 +98,20 @@ const { rating, count, reviewsUrl, live } = site.google;
           <span class="hero__badge-dot" aria-hidden="true"></span>
           <span>
             <strong>{name || (site.showPlaceholders ? '[Prénom]' : 'FlashUp')}</strong>
-            <small>Fondateur de FlashUp · Indépendant</small>
+            <small>{t1.sousNom}</small>
           </span>
         </figcaption>
       </figure>
 
       <div class="hero__text">
-        <p class="eyebrow">Préparateur esthétique automobile · {site.city}</p>
+        <p class="eyebrow">{t1.surtitre}</p>
         {(name || site.showPlaceholders) && (
           <p class="hero__hello">
             Bonjour, moi c'est {name ? <span class="text-orange">{name}</span> : <span class="ph-text">prénom à compléter</span>}.
           </p>
         )}
-        <h1>Un indépendant motivé pour préparer vos véhicules.</h1>
-        <p class="lead hero__lead">
-          Je suis seul derrière FlashUp : c'est moi qui vous réponds, moi qui prépare vos véhicules et moi qui contrôle le résultat.
-          Un seul interlocuteur, et le soin du détail de quelqu'un qui construit sa réputation véhicule après véhicule.
-        </p>
+        <h1>{t1.titre}</h1>
+        <p class="lead hero__lead">{t1.texte}</p>
         <div class="btn-row btn-row--stack">
           <a href="#travail" class="btn btn--primary btn--lg">Voir mon travail <Icon name="arrow-down" /></a>
           <a href={site.whatsappHref} class="btn btn--ghost btn--lg btn--whatsapp" target="_blank" rel="noopener"><BrandIcon name="whatsapp" /> M'écrire sur WhatsApp</a>
@@ -137,19 +132,14 @@ const { rating, count, reviewsUrl, live } = site.google;
   <section class="section" id="flashup">
     <div class="container story">
       <div class="story__head" data-reveal>
-        <p class="eyebrow">FlashUp, mon entreprise</p>
-        <h2>D'abord pour les particuliers. Aujourd'hui pour les pros.</h2>
+        <p class="eyebrow">{t2.surtitre}</p>
+        <h2>{t2.titre}</h2>
       </div>
       <div class="story__body" data-reveal>
-        <p class="lead">
-          J'ai lancé FlashUp il y a {site.experience}. Jusqu'ici, je travaillais uniquement pour des particuliers : nettoyage intérieur
-          et extérieur, rénovation, phares… Avec, à chaque fois, le même objectif : rendre un véhicule dont son propriétaire est fier.
-        </p>
-        <p class="muted">
-          Aujourd'hui, j'ouvre FlashUp aux professionnels de l'automobile : marchands VO, garages, concessions, loueurs et
-          gestionnaires de flottes. Même exigence, même motivation, avec l'organisation et la régularité qu'attend un pro.
-        </p>
+        <p class="lead">{t2.texte1}</p>
+        <p class="muted">{t2.texte2}</p>
       </div>
+      {points.length > 0 && (
       <ul class="points" data-reveal>
         {points.map((p) => (
           <li class="point">
@@ -161,6 +151,7 @@ const { rating, count, reviewsUrl, live } = site.google;
           </li>
         ))}
       </ul>
+      )}
     </div>
   </section>
 
@@ -169,12 +160,9 @@ const { rating, count, reviewsUrl, live } = site.google;
     <div class="container">
       <div class="section-head section-head--split" data-reveal>
         <div class="travail__head">
-          <p class="eyebrow">Mon travail · Vos avis</p>
-          <h2>Des résultats, et des clients satisfaits.</h2>
-          <p class="lead">
-            Avant / après, photos de résultats et avis Google. Les avis viennent de mes clients particuliers :
-            la même exigence s'applique à vos véhicules.
-          </p>
+          <p class="eyebrow">{t3.surtitre}</p>
+          <h2>{t3.titre}</h2>
+          <p class="lead">{t3.texte}</p>
         </div>
         {rating !== null && (
           <a href={reviewsUrl || '/avis/'} class="score" target={reviewsUrl ? '_blank' : undefined} rel={reviewsUrl ? 'noopener' : undefined}>
@@ -214,9 +202,9 @@ const { rating, count, reviewsUrl, live } = site.google;
   <section class="section" id="solutions">
     <div class="container">
       <div class="section-head section-head--center" data-reveal>
-        <p class="eyebrow">Solutions pros</p>
-        <h2>Vous êtes… ?</h2>
-        <p class="lead">Choisissez votre profil : je vous explique ce que je peux faire pour vous.</p>
+        <p class="eyebrow">{t4.surtitre}</p>
+        <h2>{t4.titre}</h2>
+        <p class="lead">{t4.texte}</p>
       </div>
       <div class="profiles">
         {offres.map((o) => (
@@ -237,9 +225,9 @@ const { rating, count, reviewsUrl, live } = site.google;
   <section class="section section--alt" id="contact">
     <div class="container contact">
       <div class="contact__aside" data-reveal>
-        <p class="eyebrow">Contact</p>
-        <h2>Parlons de vos véhicules.</h2>
-        <p class="lead">Un appel, un message WhatsApp ou le formulaire : je vous réponds personnellement.</p>
+        <p class="eyebrow">{t5.surtitre}</p>
+        <h2>{t5.titre}</h2>
+        <p class="lead">{t5.texte}</p>
         <ContactMethods />
       </div>
       <div class="contact__form" data-reveal>

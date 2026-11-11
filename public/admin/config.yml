@@ -151,6 +151,7 @@ collections:
           - { label: "Euro (tarifs)", value: "euro" }
           - { label: "Facture", value: "receipt" }
           - { label: "Personne validée", value: "user-check" }
+          - { label: "Éclair (réactivité)", value: "zap" }
           - { label: "Clé à molette (matériel)", value: "wrench" }
           - { label: "Bouclier (fiabilité)", value: "shield-check" }
           - { label: "Badge validé", value: "badge-check" }
@@ -208,6 +209,66 @@ collections:
       - { label: "Titre SEO (onglet Google, ~60 caractères)", name: "seoTitre", widget: "string" }
       - { label: "Description SEO (~155 caractères)", name: "seoDescription", widget: "text" }
       - { label: "Publiée sur le site", name: "publie", widget: "boolean", default: true }
+
+  # ---------------------------------------------------------------------------
+  - name: accueil
+    label: Textes de l'accueil
+    description: >-
+      Les titres et textes de la page d'accueil, dans l'ordre où ils apparaissent.
+      Astuce : écrivez {experience} pour afficher votre ancienneté (Paramètres du site) et {ville} pour « Liège ».
+      Un champ laissé vide reprend le texte d'origine.
+    editor: { preview: false }
+    files:
+      - name: textes
+        label: Textes de la page d'accueil
+        file: src/data/accueil.json
+        fields:
+          - label: "1. Présentation (en haut de page)"
+            name: "presentation"
+            widget: "object"
+            fields:
+              - { label: "Petit texte au-dessus du titre", name: "surtitre", widget: "string", required: false }
+              - { label: "Grand titre", name: "titre", widget: "string", required: false }
+              - { label: "Texte de présentation", name: "texte", widget: "text", required: false }
+              - { label: "Sous votre prénom (sur la photo)", name: "sousNom", widget: "string", required: false }
+          - label: "2. FlashUp, mon entreprise"
+            name: "entreprise"
+            widget: "object"
+            fields:
+              - { label: "Petit texte au-dessus du titre", name: "surtitre", widget: "string", required: false }
+              - { label: "Titre", name: "titre", widget: "string", required: false }
+              - { label: "Premier paragraphe", name: "texte1", widget: "text", required: false }
+              - { label: "Deuxième paragraphe", name: "texte2", widget: "text", required: false }
+              - label: "Points forts (cartes)"
+                name: "points"
+                widget: "list"
+                required: false
+                summary: "{{fields.titre}}"
+                fields:
+                  - *icone
+                  - { label: "Titre", name: "titre", widget: "string" }
+                  - { label: "Texte", name: "texte", widget: "text", required: false }
+          - label: "3. Mon travail et vos avis"
+            name: "travail"
+            widget: "object"
+            fields:
+              - { label: "Petit texte au-dessus du titre", name: "surtitre", widget: "string", required: false }
+              - { label: "Titre", name: "titre", widget: "string", required: false }
+              - { label: "Texte", name: "texte", widget: "text", required: false }
+          - label: "4. Vous êtes… ? (choix du profil)"
+            name: "solutions"
+            widget: "object"
+            fields:
+              - { label: "Petit texte au-dessus du titre", name: "surtitre", widget: "string", required: false }
+              - { label: "Titre", name: "titre", widget: "string", required: false }
+              - { label: "Texte", name: "texte", widget: "text", required: false }
+          - label: "5. Contact"
+            name: "contact"
+            widget: "object"
+            fields:
+              - { label: "Petit texte au-dessus du titre", name: "surtitre", widget: "string", required: false }
+              - { label: "Titre", name: "titre", widget: "string", required: false }
+              - { label: "Texte", name: "texte", widget: "text", required: false }
 
   # ---------------------------------------------------------------------------
   - name: parametres

@@ -38,6 +38,9 @@ Chaque enregistrement publie le site automatiquement, en **1 à 2 minutes**.
   « Mettre en avant sur la page d'accueil ». Les photos sont automatiquement réduites et converties avant l'envoi.
 - **Avis clients › Nouveau** : recopie uniquement de **vrais avis Google** (nom affiché, note, date, texte).
 - **Offres professionnelles** : textes, prestations et avantages des 3 pages d'offres, ou une nouvelle offre.
+- **Textes de l'accueil** : tous les titres et textes de la page d'accueil (présentation, FlashUp, points forts,
+  « Vous êtes… ? », contact). Écris `{experience}` pour afficher ton ancienneté et `{ville}` pour « Liège ».
+  Un champ laissé vide reprend le texte d'origine.
 - **Paramètres du site** : **prénom, photo portrait, ancienneté** (« 1 an », à mettre à jour chaque année), téléphone,
   WhatsApp, Instagram, zone d'intervention, note Google et nombre d'avis, Google Analytics, mentions légales.
   La case **Afficher les emplacements provisoires** masque les cadres orange « à compléter » une fois tes contenus ajoutés.
@@ -45,7 +48,7 @@ Chaque enregistrement publie le site automatiquement, en **1 à 2 minutes**.
 **Photos** : JPG, PNG ou WebP. Évite le format HEIC de l'iPhone (Réglages › Appareil photo › Formats › **Le plus compatible**).
 Floute les plaques d'immatriculation si nécessaire.
 
-Pour tout le reste (textes de l'accueil, design, nouvelles sections), demande à Claude.
+Pour tout le reste (design, nouvelles sections, textes des autres pages), demande à Claude.
 
 ---
 
