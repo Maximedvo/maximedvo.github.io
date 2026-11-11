@@ -36,6 +36,9 @@ Chaque enregistrement publie le site automatiquement, en **1 à 2 minutes**.
 - **Réalisations › Nouveau** : titre, type de prestation, véhicule (facultatif), description, **photo APRÈS** (obligatoire),
   **photo AVANT** (facultative : si tu l'ajoutes, le site affiche un comparateur avant / après), photos supplémentaires,
   « Mettre en avant sur la page d'accueil ». Les photos sont automatiquement réduites et converties avant l'envoi.
+- **Galerie photos › Mes plus belles photos** : tes plus belles photos, sans avant / après. **Ajouter photo** pour chacune,
+  légende facultative ; glisse-les pour changer l'ordre. Les 9 premières s'affichent sur l'accueil, toutes sur la page
+  Réalisations. Utilise de préférence les photos d'origine plutôt que des captures d'écran (sinon bandes noires).
 - **Avis clients › Nouveau** : recopie uniquement de **vrais avis Google** (nom affiché, note, date, texte).
 - **Offres professionnelles** : textes, prestations et avantages des 3 pages d'offres, ou une nouvelle offre.
 - **Textes de l'accueil** : tous les titres et textes de la page d'accueil (présentation, FlashUp, points forts,

@@ -1,0 +1,139 @@
+---
+/**
+ * Mur de photos (galerie) : photos à leurs proportions d'origine, cliquables pour les voir en grand.
+ * Tant qu'aucune photo n'est ajoutée, affiche des emplacements provisoires (si l'option est active).
+ * La visionneuse réutilise les styles globaux « .lightbox » de RealisationLightbox.
+ */
+import { Image, getImage } from 'astro:assets';
+import Icon from './Icon.astro';
+import { galerie } from '../lib/galerie';
+import { site } from '../lib/site';
+
+interface Props {
+  /** Nombre maximum de photos affichées (toutes par défaut). */
+  limit?: number;
+}
+const { limit } = Astro.props;
+
+const photos = limit ? galerie.photos.slice(0, limit) : galerie.photos;
+const placeholders = photos.length === 0 && site.showPlaceholders ? ['portrait', 'square', 'landscape', 'landscape', 'portrait', 'square'] : [];
+
+const viewer = await Promise.all(
+  photos.map(async (p) => {
+    const r = await getImage({ src: p.image, width: Math.min(p.image.width, 1800), format: 'webp', quality: 82 });
+    return {
+      src: r.src,
+      w: Number(r.attributes.width ?? p.image.width),
+      h: Number(r.attributes.height ?? p.image.height),
+      alt: p.alt,
+      legende: p.legende,
+    };
+  }),
+);
+---
+<div class="pwall" data-pwall>
+  {photos.map((p, i) => (
+    <button type="button" class:list={['pwall__item', { 'pwall__item--tall': p.image.height / p.image.width > 1.3 }]} data-pwall-open={i} aria-label={`Agrandir la photo${p.legende ? ` : ${p.legende}` : ` ${i + 1}`}`}>
+      <Image
+        src={p.image}
+        alt={p.alt}
+        widths={[400, 640, 900, 1200]}
+        sizes="(min-width: 1100px) 400px, (min-width: 700px) 33vw, 50vw"
+        format="webp"
+        quality={80}
+        loading="lazy"
+      />
+      {p.legende && <span class="pwall__caption">{p.legende}</span>}
+      <span class="photo__zoom" aria-hidden="true"><Icon name="maximize-2" /></span>
+    </button>
+  ))}
+  {placeholders.map((shape) => (
+    <div class:list={['pwall__item', 'pwall__item--ph', `pwall__item--${shape}`]}>
+      <span class="placeholder-media placeholder-media--after" role="img" aria-label="Emplacement provisoire : photo de réalisation à fournir">
+        <Icon name="camera" class="placeholder-media__icon" />
+        <span class="placeholder-media__title">Votre photo</span>
+        <span class="placeholder-media__note">Emplacement provisoire — à ajouter dans Galerie photos</span>
+      </span>
+    </div>
+  ))}
+</div>
+
+{viewer.length > 0 && (
+  <dialog class="lightbox" data-pwall-dialog aria-label="Galerie photos">
+    <div class="lightbox__inner">
+      <div class="lightbox__bar">
+        <span class="lightbox__counter" data-pw-counter></span>
+        <button type="button" class="lightbox__close" data-pw-close aria-label="Fermer la galerie">
+          <Icon name="x" />
+        </button>
+      </div>
+      <div class="lightbox__stage" data-pw-stage></div>
+      <div class="lightbox__info">
+        <p class="lightbox__meta"><span>Galerie FlashUp</span></p>
+        <h2 class="lightbox__title" data-pw-title></h2>
+        <a href="/contact/" class="btn btn--primary lightbox__cta">Demander un devis <Icon name="arrow-right" /></a>
+      </div>
+      <div class="lightbox__nav">
+        <button type="button" class="lightbox__arrow" data-pw-prev aria-label="Photo précédente"><Icon name="chevron-left" /></button>
+        <button type="button" class="lightbox__arrow" data-pw-next aria-label="Photo suivante"><Icon name="chevron-right" /></button>
+      </div>
+    </div>
+    <script type="application/json" data-pwall-data set:html={JSON.stringify(viewer).replace(/</g, '\\u003c')} is:inline />
+  </dialog>
+)}
+
+<script>
+  import { initPhotoWall } from '../scripts/photowall';
+  initPhotoWall();
+</script>
+
+<style>
+  /* Mur de photos « maçonnerie » : chaque photo garde ses proportions */
+  .pwall { columns: 2; column-gap: clamp(10px, 1.6vw, 20px); }
+  @media (min-width: 900px) { .pwall { columns: 3; } }
+  .pwall__item {
+    position: relative;
+    display: block;
+    width: 100%;
+    margin: 0 0 clamp(10px, 1.6vw, 20px);
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--c-surface);
+    break-inside: avoid;
+    cursor: zoom-in;
+  }
+  .pwall__item :global(img) { display: block; width: 100%; height: auto; transition: transform 0.8s var(--ease); }
+  .pwall__item:hover :global(img) { transform: scale(1.03); }
+  /* photos très hautes (captures d'écran de téléphone) : recadrées en 4:5, centrées ; entières dans la visionneuse */
+  .pwall__item--tall { aspect-ratio: 4 / 5; }
+  .pwall__item--tall :global(img) { height: 100%; object-fit: cover; }
+  .pwall__item:focus-visible { outline: 2px solid var(--c-orange); outline-offset: 3px; }
+  .pwall__item:hover .photo__zoom { background: var(--c-orange); color: #0a0a0b; }
+  .pwall__caption {
+    position: absolute;
+    inset: auto 0 0 0;
+    z-index: 1;
+    padding: 36px 64px 14px 16px;
+    text-align: left;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--c-white);
+    background: linear-gradient(0deg, rgba(10, 10, 11, 0.85), transparent);
+  }
+  @media (max-width: 520px) {
+    .pwall__caption { padding: 28px 12px 10px; font-size: 0.78rem; }
+    .pwall__item .photo__zoom { display: none; }
+  }
+
+  .lightbox__stage { touch-action: pan-y; }
+  .pwall__item--ph { cursor: default; }
+  .pwall__item--portrait { aspect-ratio: 4 / 5; }
+  .pwall__item--square { aspect-ratio: 1 / 1; }
+  .pwall__item--landscape { aspect-ratio: 4 / 3; }
+  .pwall__item--ph .placeholder-media { border-radius: inherit; }
+  @media (max-width: 520px) {
+    .pwall__item--ph .placeholder-media__note { font-size: 0.72rem; }
+  }
+</style>

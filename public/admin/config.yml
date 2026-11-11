@@ -82,6 +82,37 @@ collections:
       - { label: "Publiée sur le site", name: "publie", widget: "boolean", default: true }
 
   # ---------------------------------------------------------------------------
+  - name: galerie
+    label: Galerie photos
+    description: >-
+      Vos plus belles photos, sans avant / après : elles s'affichent sur l'accueil et sur la page Réalisations.
+      Cliquez sur « Ajouter » pour chaque photo, et glissez-les pour changer l'ordre (la première s'affiche en premier).
+    editor: { preview: false }
+    media_folder: /src/assets/uploads/galerie
+    public_folder: /src/assets/uploads/galerie
+    files:
+      - name: photos
+        label: Mes plus belles photos
+        file: src/data/galerie.json
+        media_folder: /src/assets/uploads/galerie
+        public_folder: /src/assets/uploads/galerie
+        fields:
+          - label: "Photos"
+            name: "photos"
+            label_singular: "photo"
+            widget: "list"
+            required: false
+            summary: "{{fields.legende}}"
+            hint: "JPG, PNG ou WebP. Les photos sont optimisées automatiquement. Floutez les plaques si nécessaire."
+            fields:
+              - { label: "Photo", name: "photo", widget: "image", choose_url: false }
+              - { label: "Légende (facultatif)", name: "legende", widget: "string", required: false, hint: "Ex. : Golf 7 — rénovation intérieure complète" }
+          - { label: "Afficher la galerie sur la page d'accueil", name: "afficherAccueil", widget: "boolean", default: true, hint: "Les 9 premières photos sur l'accueil, toutes sur la page Réalisations." }
+          - { label: "Petit texte au-dessus du titre", name: "surtitre", widget: "string", required: false }
+          - { label: "Titre de la galerie", name: "titre", widget: "string", required: false }
+          - { label: "Texte sous le titre (facultatif)", name: "texte", widget: "text", required: false }
+
+  # ---------------------------------------------------------------------------
   - name: avis
     label: Avis clients
     label_singular: Avis
