@@ -28,8 +28,11 @@ const detailed = o.prestations.some((p) => p.elements.length > 0);
 const letters = 'ABCDEFGHIJ';
 
 const cats = o.categoriesRealisations;
+// Réalisations liées à l'offre ; à défaut, les plus récentes (jamais d'emplacement provisoire s'il en existe)
+const allReals = await getRealisations();
+const matching = allReals.filter((r) => !cats.length || cats.includes(r.categorie));
 const related = withPlaceholders(
-  (await getRealisations()).filter((r) => !cats.length || cats.includes(r.categorie)).slice(0, 3),
+  (matching.length ? matching : allReals).slice(0, 3),
   cats,
   3,
 );

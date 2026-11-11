@@ -73,12 +73,13 @@ export function placeholderFor(categorie: CategoryKey, compare = true): Realisat
 }
 
 /**
- * Complète une liste avec des emplacements provisoires si nécessaire
+ * Affiche des emplacements provisoires tant qu'aucune vraie réalisation n'existe
  * (uniquement si l'option « afficher les emplacements provisoires » est active).
+ * Dès la première vraie réalisation, seules les vraies sont affichées.
  * Alterne comparateurs avant / après et photos « après » seules.
  */
 export function withPlaceholders(items: Realisation[], categories: CategoryKey[], min: number): Realisation[] {
-  if (!site.showPlaceholders || items.length >= min) return items;
+  if (!site.showPlaceholders || items.length > 0) return items;
   const out = [...items];
   let i = 0;
   for (const cat of categories.length ? categories : CATEGORY_KEYS) {

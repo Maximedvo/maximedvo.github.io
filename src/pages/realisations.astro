@@ -11,7 +11,8 @@ import { site } from '../lib/site';
 
 const real = await getRealisations();
 const items = [...real];
-if (site.showPlaceholders) {
+// Emplacements provisoires uniquement tant qu'aucune vraie réalisation n'est publiée
+if (site.showPlaceholders && real.length === 0) {
   for (const cat of CATEGORY_KEYS) {
     if (!real.some((r) => r.categorie === cat)) items.push(placeholderFor(cat));
   }
