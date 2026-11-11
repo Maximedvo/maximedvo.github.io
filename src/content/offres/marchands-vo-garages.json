@@ -6,9 +6,7 @@
   "surtitre": "Marchands VO · Garages indépendants",
   "titre": "La préparation esthétique de vos véhicules d'occasion, en toute simplicité.",
   "introduction": "Je m'occupe de la préparation esthétique de vos véhicules d'occasion avant leur mise en vente ou leur livraison. Vous achetez et vendez, je rends vos véhicules présentables.",
-  "image": "",
-  "seoTitre": "Nettoyage véhicules d'occasion à Liège | FlashUp",
-  "seoDescription": "Préparation esthétique et nettoyage de véhicules d'occasion à Liège pour marchands VO et garages. Tarifs adaptés au volume : demandez votre tarif pro.",
+  "image": "/src/assets/uploads/site/IMG_7044.webp",
   "icone": "key-round",
   "prestationsTitre": "Mes prestations pour vos véhicules d'occasion",
   "prestations": [
@@ -84,5 +82,7 @@
     "renovation-complete",
     "renovation-phares"
   ],
+  "seoTitre": "Nettoyage véhicules d'occasion à Liège | FlashUp",
+  "seoDescription": "Préparation esthétique et nettoyage de véhicules d'occasion à Liège pour marchands VO et garages. Tarifs adaptés au volume : demandez votre tarif pro.",
   "publie": true
 }
