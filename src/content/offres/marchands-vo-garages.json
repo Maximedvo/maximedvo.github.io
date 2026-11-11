@@ -11,33 +11,28 @@
   "prestationsTitre": "Mes prestations pour vos véhicules d'occasion",
   "prestations": [
     {
-      "titre": "Nettoyage intérieur complet",
-      "description": "Un habitacle net et soigné, prêt pour les photos d'annonce et les essais.",
+      "titre": "Nettoyage complet",
+      "description": "Nettoyage intégrale intérieur et extérieur en profondeur. Le véhicule\nressort comme neuf, parfaitement propre, prêt pour les photos et\nles visites.",
       "elements": []
     },
     {
-      "titre": "Nettoyage extérieur",
-      "description": "Une carrosserie propre et lumineuse pour une première impression réussie.",
+      "titre": "Rafraîchissement",
+      "description": "Pour un véhicule déjà préparé qui a pris la poussière ou a été sali par des\nessais. Dépoussiérage complet, aspiration, nettoyage extérieur rapide à sec,\nvitres et parfum",
       "elements": []
     },
     {
-      "titre": "Préparation esthétique avant mise en vente",
-      "description": "Une présentation homogène de votre stock, véhicule après véhicule.",
+      "titre": "Shampoing sièges et moquettes",
+      "description": "Taches, auréoles, tissus ternes :\nsièges et tapis retrouvent leur\ncouleur. Indispensable sur un\nintérieur en tissu marqué",
       "elements": []
     },
     {
-      "titre": "Rénovation intérieure",
-      "description": "Pour les habitacles plus marqués : remise en valeur des éléments intérieurs.",
+      "titre": "Rénovation des phares",
+      "description": "Des phares jaunis vieillissent une\nvoiture sur ses photos. Ponçage,\npolissage et protection UV : elle\nparaît plus récente, et l'éclairage\nest amélioré avant le contrôle\ntechnique.",
       "elements": []
     },
     {
-      "titre": "Rénovation esthétique complète",
-      "description": "Intérieur et extérieur traités ensemble pour les véhicules qui le méritent.",
-      "elements": []
-    },
-    {
-      "titre": "Polissage et rénovation de phares",
-      "description": "Des optiques ternies retrouvent de la clarté et rajeunissent la face avant.",
+      "titre": "Nettoyage moteur",
+      "description": "Quand l'acheteur ouvre le capot,\nun moteur propre le rassure sur\nl'entretien. Vapeur douce, sans\nhaute pression.",
       "elements": []
     }
   ],
