@@ -1,7 +1,7 @@
 {
   "nom": "FlashUp",
   "slogan": "Esthétique • Automobile",
-  "prenom": "",
+  "prenom": "Maxime",
   "photoPortrait": "",
   "experience": "1 an",
   "telephone": "0490 46 89 16",
@@ -30,8 +30,8 @@
   "google": {
     "lienAvis": "https://share.google/3tsHcbDExUBZ7kYlB",
     "lienLaisserAvis": "",
-    "note": "",
-    "nombreAvis": "",
+    "note": "4,9",
+    "nombreAvis": "30",
     "synchronisationAutomatique": false
   },
   "analytics": {
