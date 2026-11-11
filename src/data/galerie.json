@@ -1,7 +1,32 @@
 {
+  "photos": [
+    {
+      "photo": "/src/assets/uploads/galerie/IMG_7166.webp",
+      "legende": ""
+    },
+    {
+      "photo": "/src/assets/uploads/galerie/IMG_7168.webp",
+      "legende": "Ferari California"
+    },
+    {
+      "photo": "/src/assets/uploads/galerie/IMG_7170.webp",
+      "legende": "Ford Mustang 1969"
+    },
+    {
+      "photo": "/src/assets/uploads/galerie/IMG_7171.webp",
+      "legende": ""
+    },
+    {
+      "photo": "/src/assets/uploads/galerie/IMG_7172.webp",
+      "legende": ""
+    },
+    {
+      "photo": "/src/assets/uploads/galerie/IMG_7173.webp",
+      "legende": "Porshe 911 turbo s"
+    }
+  ],
+  "afficherAccueil": true,
   "surtitre": "Galerie",
   "titre": "Mes plus belles réalisations.",
-  "texte": "Une sélection de mes résultats préférés, en photo.",
-  "afficherAccueil": true,
-  "photos": []
+  "texte": "Une sélection de mes résultats préférés, en photo."
 }
