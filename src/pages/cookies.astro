@@ -2,7 +2,9 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import { site } from '../lib/site';
+import { video } from '../lib/video';
 const hasGA = Boolean(site.analytics.ga4);
+const hasYouTube = video.visible && video.kind === 'youtube';
 ---
 <BaseLayout
   title="Politique cookies — FlashUp"
@@ -27,6 +29,7 @@ const hasGA = Boolean(site.analytics.ga4);
             <tbody>
               <tr><td>flashup-consent</td><td>Mémoriser vos choix en matière de cookies</td><td>Essentiel (stockage local)</td><td>6 mois</td></tr>
               {hasGA && <tr><td>_ga</td><td>Google Analytics 4 : distinguer les visiteurs de façon anonyme</td><td>Mesure d'audience (avec consentement)</td><td>2 ans</td></tr>}
+              {hasYouTube && <tr><td>YouTube (youtube-nocookie.com)</td><td>Lecture de la vidéo de la page d'accueil, uniquement si vous la lancez</td><td>Service tiers (au lancement de la vidéo)</td><td>Selon YouTube</td></tr>}
               {hasGA && <tr><td>_ga_&lt;ID&gt;</td><td>Google Analytics 4 : conserver l'état de la session</td><td>Mesure d'audience (avec consentement)</td><td>2 ans</td></tr>}
             </tbody>
           </table>

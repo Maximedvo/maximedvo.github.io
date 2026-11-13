@@ -25,7 +25,7 @@ logo:
 media_libraries:
   default:
     config:
-      max_file_size: 25000000
+      max_file_size: 50000000
       transformations:
         raster_image:
           format: webp
@@ -111,6 +111,38 @@ collections:
           - { label: "Petit texte au-dessus du titre", name: "surtitre", widget: "string", required: false }
           - { label: "Titre de la galerie", name: "titre", widget: "string", required: false }
           - { label: "Texte sous le titre (facultatif)", name: "texte", widget: "text", required: false }
+
+  # ---------------------------------------------------------------------------
+  - name: video
+    label: Vidéo
+    description: >-
+      Une vidéo « Comment je travaille », affichée sur l'accueil.
+      Le plus simple : publiez-la sur YouTube (en « Non répertoriée » si vous voulez qu'elle ne soit visible que via votre site) et collez le lien.
+      Vous pouvez aussi coller un lien Instagram / TikTok, ou envoyer un fichier MP4 court (moins de 50 Mo).
+    editor: { preview: false }
+    media_folder: /public/uploads/videos
+    public_folder: /uploads/videos
+    files:
+      - name: video
+        label: Ma vidéo « Comment je travaille »
+        file: src/data/video.json
+        media_folder: /public/uploads/videos
+        public_folder: /uploads/videos
+        fields:
+          - { label: "Afficher la vidéo sur l'accueil", name: "afficher", widget: "boolean", default: true }
+          - { label: "Lien de la vidéo (YouTube, Instagram, TikTok…)", name: "lien", widget: "string", required: false, hint: "Ex. : https://youtu.be/xxxxxxxxxxx ou https://www.youtube.com/shorts/… ou https://www.instagram.com/reel/…  Une vidéo YouTube se lit directement sur le site ; un lien Instagram ou TikTok ouvre la vidéo sur la plateforme." }
+          - { label: "OU fichier vidéo (facultatif)", name: "fichier", widget: "file", required: false, choose_url: false, hint: "MP4 de préférence, moins de 50 Mo (sur iPhone : Réglages › Appareil photo › Formats › Le plus compatible). Utilisé seulement si le lien est vide." }
+          - label: "Format de la vidéo"
+            name: "format"
+            widget: "select"
+            default: "horizontal"
+            options:
+              - { label: "Horizontale (16:9)", value: "horizontal" }
+              - { label: "Verticale, filmée au téléphone (9:16)", value: "vertical" }
+          - { label: "Image d'aperçu (facultatif, conseillé)", name: "affiche", widget: "image", required: false, choose_url: false, media_folder: "/src/assets/uploads/site", public_folder: "/src/assets/uploads/site", hint: "Affichée avant le lancement de la vidéo." }
+          - { label: "Petit texte au-dessus du titre", name: "surtitre", widget: "string", required: false }
+          - { label: "Titre", name: "titre", widget: "string", required: false }
+          - { label: "Texte (facultatif)", name: "texte", widget: "text", required: false }
 
   # ---------------------------------------------------------------------------
   - name: avis

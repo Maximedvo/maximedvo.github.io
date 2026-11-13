@@ -1,0 +1,204 @@
+---
+/**
+ * Section « Comment je travaille » : une vidéo YouTube (chargée seulement au clic,
+ * sans cookie avant lecture), un lien Instagram / TikTok / Facebook, ou un fichier vidéo.
+ * Contenu modifiable dans l'administration (« Vidéo »).
+ */
+import { Image, getImage } from 'astro:assets';
+import Icon from './Icon.astro';
+import { video } from '../lib/video';
+
+interface Props {
+  alt?: boolean;
+}
+const { alt = false } = Astro.props;
+
+const poster = video.poster;
+const posterSrc =
+  typeof poster === 'string'
+    ? poster
+    : poster
+      ? (await getImage({ src: poster, width: Math.min(poster.width, 1600), format: 'webp', quality: 80 })).src
+      : undefined;
+
+// Sans image d'aperçu : miniature YouTube téléchargée à la compilation et servie depuis le site
+// (aucune requête vers Google avant que le visiteur lance la vidéo).
+let ytThumb: string | undefined;
+if (video.kind === 'youtube' && !poster) {
+  for (const name of ['maxresdefault', 'sddefault', 'hqdefault']) {
+    try {
+      const r = await getImage({ src: `https://i.ytimg.com/vi/${video.youtubeId}/${name}.jpg`, inferSize: true, format: 'webp', quality: 80 });
+      ytThumb = r.src;
+      break;
+    } catch {
+      /* miniature absente : essayer la suivante */
+    }
+  }
+}
+---
+{video.visible && (
+  <section class:list={['section', { 'section--alt': alt }]} id="video">
+    <div class:list={['container', 'vsection', { 'vsection--vertical': video.vertical }]}>
+      <div class="section-head vsection__text" data-reveal>
+        <p class="eyebrow">{video.surtitre}</p>
+        <h2>{video.titre}</h2>
+        {video.texte && <p class="lead">{video.texte}</p>}
+        <div class="btn-row vsection__cta">
+          <a href="#contact" class="btn btn--primary">Demander un devis <Icon name="arrow-right" /></a>
+        </div>
+      </div>
+
+      <div class="vsection__media" data-reveal>
+        {video.kind === 'youtube' && (
+          <>
+            <button type="button" class:list={['vplayer', { 'vplayer--vertical': video.vertical }]} data-yt={video.youtubeId} aria-label={`Lire la vidéo : ${video.titre}`}>
+              {poster && typeof poster !== 'string' && (
+                <Image src={poster} alt="" widths={[480, 800, 1200, 1600]} sizes="(min-width: 1100px) 900px, 100vw" format="webp" quality={80} loading="lazy" />
+              )}
+              {typeof poster === 'string' && <img src={poster} alt="" loading="lazy" decoding="async" />}
+              {ytThumb && <img src={ytThumb} alt="" loading="lazy" decoding="async" />}
+              <span class="vplayer__play" aria-hidden="true"><Icon name="play" strokeWidth={2} /></span>
+              <span class="vplayer__label" aria-hidden="true">Lire la vidéo</span>
+            </button>
+            <p class="vsection__note">
+              Vidéo hébergée sur YouTube : elle n'est chargée que si vous la lancez
+              (voir la <a href="/confidentialite/">politique de confidentialité</a>).
+            </p>
+          </>
+        )}
+
+        {video.kind === 'link' && (
+          <a href={video.link} target="_blank" rel="noopener" class:list={['vplayer', 'vplayer--link', { 'vplayer--vertical': video.vertical }]}>
+            {posterSrc && <img src={posterSrc} alt="" loading="lazy" decoding="async" />}
+            <span class="vplayer__play" aria-hidden="true"><Icon name="play" strokeWidth={2} /></span>
+            <span class="vplayer__label">
+              {video.platform ? `Voir la vidéo sur ${video.platform}` : 'Voir la vidéo'} <Icon name="external-link" />
+            </span>
+          </a>
+        )}
+
+        {video.kind === 'file' && video.file && (
+          <div class:list={['vplayer', 'vplayer--file', { 'vplayer--vertical': video.vertical }]}>
+            <video controls playsinline preload="metadata" poster={posterSrc}>
+              <source src={video.file.src} type={video.file.type} />
+              <a href={video.file.src}>Télécharger la vidéo</a>
+            </video>
+          </div>
+        )}
+
+        {video.kind === 'placeholder' && (
+          <div class:list={['vplayer', 'vplayer--ph', { 'vplayer--vertical': video.vertical }]}>
+            <span class="placeholder-media placeholder-media--after" role="img" aria-label="Emplacement provisoire : vidéo à ajouter">
+              <Icon name="clapperboard" class="placeholder-media__icon" />
+              <span class="placeholder-media__title">Votre vidéo</span>
+              <span class="placeholder-media__note">Emplacement provisoire — ajoutez un lien YouTube, Instagram ou un fichier dans l'administration (Vidéo)</span>
+            </span>
+          </div>
+        )}
+      </div>
+    </div>
+  </section>
+)}
+
+<script>
+  // Lecture YouTube : l'iframe (youtube-nocookie.com) n'est créée qu'au clic.
+  document.querySelectorAll<HTMLButtonElement>('[data-yt]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.yt;
+      if (!id || !/^[\w-]{11}$/.test(id)) return;
+      const frame = document.createElement('iframe');
+      frame.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&playsinline=1`;
+      frame.title = btn.getAttribute('aria-label') || 'Vidéo';
+      frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+      frame.referrerPolicy = 'strict-origin-when-cross-origin';
+      const box = document.createElement('div');
+      box.className = btn.className;
+      // reprendre l'attribut de portée des styles Astro (data-astro-cid-…)
+      for (const a of Array.from(btn.attributes)) if (a.name.startsWith('data-astro-cid')) box.setAttribute(a.name, a.value);
+      box.append(frame);
+      btn.replaceWith(box);
+      frame.focus();
+    });
+  });
+</script>
+
+<style>
+  .vsection { display: grid; gap: clamp(24px, 4vw, 40px); }
+  .vsection__text { margin-bottom: 0; }
+  .vsection__cta { margin-top: 4px; }
+  .vsection__media { display: grid; gap: 10px; justify-items: center; }
+  @media (min-width: 1024px) {
+    .vsection { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); align-items: center; column-gap: clamp(40px, 5vw, 80px); }
+    .vsection--vertical { grid-template-columns: 1fr minmax(280px, 400px); column-gap: clamp(40px, 6vw, 96px); }
+  }
+  .vsection__note { margin: 0; font-size: 0.8rem; color: var(--c-text-3); text-align: center; }
+  .vsection__note a { color: var(--c-text-2); text-decoration: underline; text-underline-offset: 3px; }
+
+  .vplayer {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    padding: 0;
+    border: 1px solid var(--c-line-strong);
+    border-radius: 14px;
+    overflow: hidden;
+    color: var(--c-white);
+    background:
+      radial-gradient(60% 60% at 50% 40%, rgba(240, 118, 12, 0.18), transparent 70%),
+      linear-gradient(160deg, #17181c, #0b0b0d);
+    box-shadow: var(--shadow);
+  }
+  .vplayer--vertical { aspect-ratio: 9 / 16; max-width: 400px; }
+  .vplayer :global(img),
+  .vplayer video,
+  .vplayer :global(iframe) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  .vplayer :global(img) { object-fit: cover; opacity: 0.85; transition: opacity 0.3s, transform 0.8s var(--ease); }
+  .vplayer video { object-fit: contain; background: #000; }
+  button.vplayer,
+  a.vplayer { cursor: pointer; }
+  button.vplayer:hover :global(img),
+  a.vplayer:hover :global(img) { opacity: 1; transform: scale(1.02); }
+  .vplayer__play {
+    position: relative;
+    z-index: 1;
+    width: 76px;
+    height: 76px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--c-orange);
+    color: #0a0a0b;
+    box-shadow: 0 0 0 10px rgba(240, 118, 12, 0.22);
+    transition: transform 0.25s var(--ease);
+  }
+  .vplayer__play :global(svg) { width: 30px; height: 30px; margin-left: 4px; fill: currentColor; }
+  .vplayer:hover .vplayer__play { transform: scale(1.06); }
+  .vplayer__label {
+    position: absolute;
+    left: 50%;
+    bottom: 18px;
+    z-index: 1;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(10, 10, 11, 0.75);
+    backdrop-filter: blur(6px);
+    font-size: 0.88rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .vplayer__label :global(svg) { width: 15px; height: 15px; }
+  .vplayer:focus-visible { outline: 2px solid var(--c-orange); outline-offset: 3px; }
+  .vplayer--ph .placeholder-media { border-radius: inherit; }
+</style>

@@ -22,6 +22,8 @@ import { getRealisations, withPlaceholders, type Realisation } from '../lib/real
 import { accueil } from '../lib/accueil';
 import { galerie } from '../lib/galerie';
 import PhotoWall from '../components/PhotoWall.astro';
+import VideoSection from '../components/VideoSection.astro';
+import { video } from '../lib/video';
 
 const portrait = resolveImage(site.portrait);
 const name = site.firstName;
@@ -62,6 +64,11 @@ const points = t2.points;
 
 // Galerie : nombre de photos montrées sur l'accueil (les autres sur /realisations/)
 const GALLERY_HOME = 9;
+
+// Alternance des fonds de section selon les sections réellement affichées
+const showGallery = galerie.visible && galerie.surAccueil;
+const sectionOrder = ['flashup', video.visible && 'video', 'travail', showGallery && 'galerie', 'solutions', 'contact'].filter(Boolean);
+const alt = (id: string) => sectionOrder.indexOf(id) % 2 === 1;
 
 const { rating, count, reviewsUrl, live } = site.google;
 ---
@@ -161,7 +168,10 @@ const { rating, count, reviewsUrl, live } = site.google;
   </section>
 
   <!-- ============ 3. MON TRAVAIL + AVIS ============ -->
-  <section class="section section--alt" id="travail">
+  <!-- ============ 2 bis. COMMENT JE TRAVAILLE (vidéo) ============ -->
+  <VideoSection alt={alt('video')} />
+
+  <section class:list={['section', { 'section--alt': alt('travail') }]} id="travail">
     <div class="container">
       <div class="section-head section-head--split" data-reveal>
         <div class="travail__head">
@@ -204,8 +214,8 @@ const { rating, count, reviewsUrl, live } = site.google;
   </section>
 
   <!-- ============ 3 bis. GALERIE PHOTOS ============ -->
-  {galerie.visible && galerie.surAccueil && (
-    <section class="section" id="galerie">
+  {showGallery && (
+    <section class:list={['section', { 'section--alt': alt('galerie') }]} id="galerie">
       <div class="container">
         <div class="section-head" data-reveal>
           <p class="eyebrow">{galerie.surtitre}</p>
@@ -223,7 +233,7 @@ const { rating, count, reviewsUrl, live } = site.google;
   )}
 
   <!-- ============ 4. VOUS ÊTES… ? ============ -->
-  <section class:list={['section', { 'section--alt': galerie.visible && galerie.surAccueil }]} id="solutions">
+  <section class:list={['section', { 'section--alt': alt('solutions') }]} id="solutions">
     <div class="container">
       <div class="section-head section-head--center" data-reveal>
         <p class="eyebrow">{t4.surtitre}</p>
@@ -246,7 +256,7 @@ const { rating, count, reviewsUrl, live } = site.google;
   </section>
 
   <!-- ============ 5. CONTACT ============ -->
-  <section class:list={['section', { 'section--alt': !(galerie.visible && galerie.surAccueil) }]} id="contact">
+  <section class:list={['section', { 'section--alt': alt('contact') }]} id="contact">
     <div class="container contact">
       <div class="contact__aside" data-reveal>
         <p class="eyebrow">{t5.surtitre}</p>

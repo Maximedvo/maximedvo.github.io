@@ -7,6 +7,8 @@ const SITE_URL = process.env.SITE_URL || 'https://flashup-pro.be';
 
 export default defineConfig({
   site: SITE_URL,
+  // miniatures des vidéos YouTube, téléchargées et optimisées à la compilation
+  image: { domains: ['i.ytimg.com'] },
   trailingSlash: 'ignore',
   build: {
     format: 'directory',
@@ -31,6 +33,8 @@ export default defineConfig({
         "img-src 'self' data: blob: https://*.googleusercontent.com https://www.googletagmanager.com https://*.google-analytics.com",
         "connect-src 'self' https://formsubmit.co https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com",
         "font-src 'self'",
+        // vidéo YouTube (chargée seulement quand le visiteur la lance)
+        "frame-src https://www.youtube-nocookie.com",
         "object-src 'none'",
         "base-uri 'self'",
         "form-action 'self' https://formsubmit.co",

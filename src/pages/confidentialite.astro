@@ -2,11 +2,13 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import { site } from '../lib/site';
+import { video } from '../lib/video';
 
 const L = site.legal;
 const controller = L.denomination || 'FlashUp';
 const address = L.address || '[À compléter : adresse]';
 const hasGA = Boolean(site.analytics.ga4);
+const hasYouTube = video.visible && video.kind === 'youtube';
 ---
 <BaseLayout
   title="Politique de confidentialité — FlashUp"
@@ -53,6 +55,7 @@ const hasGA = Boolean(site.analytics.ga4);
           <li><strong>GitHub, Inc.</strong> (États-Unis) : hébergement du site (GitHub Pages).</li>
           <li><strong>FormSubmit</strong> (formsubmit.co) : transmission par e-mail des demandes envoyées via le formulaire de devis.</li>
           <li><strong>Google</strong> : messagerie électronique professionnelle{hasGA && ' et mesure d’audience (Google Analytics 4, uniquement avec votre accord)'}.</li>
+          {hasYouTube && <li><strong>YouTube (Google)</strong> : uniquement si vous lancez la vidéo de la page d'accueil ; elle est alors chargée depuis youtube-nocookie.com, selon les conditions de ce service.</li>}
           <li><strong>WhatsApp / Meta</strong> : uniquement si vous choisissez de nous contacter via WhatsApp, selon les conditions de ce service.</li>
         </ul>
         <p>Certains de ces prestataires peuvent traiter des données en dehors de l'Union européenne. Ces transferts sont encadrés par des garanties appropriées (cadre de protection des données UE–États-Unis et/ou clauses contractuelles types de la Commission européenne).</p>

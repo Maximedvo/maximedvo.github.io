@@ -39,6 +39,10 @@ Chaque enregistrement publie le site automatiquement, en **1 à 2 minutes**.
 - **Galerie photos › Mes plus belles photos** : tes plus belles photos, sans avant / après. **Ajouter photo** pour chacune,
   légende facultative ; glisse-les pour changer l'ordre. Les 9 premières s'affichent sur l'accueil, toutes sur la page
   Réalisations. Utilise de préférence les photos d'origine plutôt que des captures d'écran (sinon bandes noires).
+- **Vidéo › Ma vidéo « Comment je travaille »** : colle le **lien YouTube** de ta vidéo (le plus simple et le plus fiable ;
+  publie-la en « Non répertoriée » si tu veux qu'on ne la trouve que via ton site). Un lien **Instagram / TikTok** fonctionne aussi
+  (bouton qui ouvre la vidéo sur la plateforme), ou un **fichier MP4** court (moins de 50 Mo). Choisis le **format** (horizontal ou
+  vertical) et, si tu veux, une **image d'aperçu** (sinon la miniature YouTube est reprise automatiquement).
 - **Avis clients › Nouveau** : recopie uniquement de **vrais avis Google** (nom affiché, note, date, texte).
 - **Offres professionnelles** : textes, prestations et avantages des 3 pages d'offres, ou une nouvelle offre.
 - **Textes de l'accueil** : tous les titres et textes de la page d'accueil (présentation, FlashUp, points forts,
