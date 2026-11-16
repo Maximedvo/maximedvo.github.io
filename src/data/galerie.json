@@ -1,6 +1,34 @@
 {
   "photos": [
     {
+      "photo": "/src/assets/uploads/galerie/2026-11-17-porsche-cayenne-s.webp",
+      "legende": "Porsche Cayenne S — habitacle"
+    },
+    {
+      "photo": "/src/assets/uploads/galerie/2026-11-17-ferrari-california-interieur.webp",
+      "legende": "Ferrari California — intérieur"
+    },
+    {
+      "photo": "/src/assets/uploads/galerie/2026-11-17-bmw-serie3-coupe.webp",
+      "legende": "BMW Série 3 Coupé — intérieur cuir"
+    },
+    {
+      "photo": "/src/assets/uploads/galerie/2026-11-17-porsche-macan.webp",
+      "legende": "Porsche Macan"
+    },
+    {
+      "photo": "/src/assets/uploads/galerie/2026-11-17-peugeot-3008.webp",
+      "legende": "Peugeot 3008 — intérieur"
+    },
+    {
+      "photo": "/src/assets/uploads/galerie/2026-11-17-bmw-ix1.webp",
+      "legende": "BMW iX1 — intérieur"
+    },
+    {
+      "photo": "/src/assets/uploads/galerie/2026-11-17-audi-q8.webp",
+      "legende": "Audi Q8"
+    },
+    {
       "photo": "/src/assets/uploads/galerie/IMG_7168.webp",
       "legende": "Ferrari California"
     },
