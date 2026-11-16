@@ -1,0 +1,12 @@
+{
+  "titre": "Nettoyage Coffre",
+  "categorie": "nettoyage-interieur",
+  "vehicule": "Audi",
+  "description": "",
+  "apres": "/src/assets/uploads/realisations/2026-11-16-coffre-apres.webp",
+  "avant": "/src/assets/uploads/realisations/2026-11-16-coffre-avant.webp",
+  "photos": [],
+  "miseEnAvant": true,
+  "date": "2026-11-16",
+  "publie": true
+}

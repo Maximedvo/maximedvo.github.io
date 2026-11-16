@@ -1,16 +1,60 @@
 {
   "photos": [
     {
-      "photo": "/src/assets/uploads/galerie/IMG_7166.webp",
-      "legende": ""
+      "photo": "/src/assets/uploads/galerie/IMG_7168.webp",
+      "legende": "Ferrari California"
     },
     {
-      "photo": "/src/assets/uploads/galerie/IMG_7168.webp",
-      "legende": "Ferari California"
+      "photo": "/src/assets/uploads/galerie/2026-11-16-mousse-active.webp",
+      "legende": "Prélavage à la mousse active"
+    },
+    {
+      "photo": "/src/assets/uploads/galerie/2026-11-16-polo-sieges.webp",
+      "legende": "Polo GTI — sièges shampouinés"
+    },
+    {
+      "photo": "/src/assets/uploads/galerie/IMG_7173.webp",
+      "legende": "Porsche 911 Turbo S"
+    },
+    {
+      "photo": "/src/assets/uploads/galerie/2026-11-16-polo-jante.webp",
+      "legende": "Polo GTI — jante nettoyée"
+    },
+    {
+      "photo": "/src/assets/uploads/galerie/2026-11-16-polo-poste-conduite.webp",
+      "legende": "Polo GTI — poste de conduite"
     },
     {
       "photo": "/src/assets/uploads/galerie/IMG_7170.webp",
       "legende": "Ford Mustang 1969"
+    },
+    {
+      "photo": "/src/assets/uploads/galerie/2026-11-16-polo-habitacle.webp",
+      "legende": "Polo GTI — habitacle complet"
+    },
+    {
+      "photo": "/src/assets/uploads/galerie/2026-11-16-interieur-noir.webp",
+      "legende": "Intérieur remis à neuf"
+    },
+    {
+      "photo": "/src/assets/uploads/galerie/2026-11-16-polo-console.webp",
+      "legende": "Polo GTI — console et tableau de bord"
+    },
+    {
+      "photo": "/src/assets/uploads/galerie/2026-11-16-polo-carrosserie.webp",
+      "legende": "Polo GTI — carrosserie lavée"
+    },
+    {
+      "photo": "/src/assets/uploads/galerie/2026-11-16-mazda-siege.webp",
+      "legende": "Mazda CX-3 — siège après shampoing"
+    },
+    {
+      "photo": "/src/assets/uploads/galerie/2026-11-16-console-noire.webp",
+      "legende": "Console centrale — finitions"
+    },
+    {
+      "photo": "/src/assets/uploads/galerie/IMG_7166.webp",
+      "legende": ""
     },
     {
       "photo": "/src/assets/uploads/galerie/IMG_7171.webp",
@@ -19,10 +63,6 @@
     {
       "photo": "/src/assets/uploads/galerie/IMG_7172.webp",
       "legende": ""
-    },
-    {
-      "photo": "/src/assets/uploads/galerie/IMG_7173.webp",
-      "legende": "Porshe 911 turbo s"
     }
   ],
   "afficherAccueil": true,
