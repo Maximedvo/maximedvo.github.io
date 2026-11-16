@@ -1,0 +1,12 @@
+{
+  "titre": "Rénovation de phares",
+  "categorie": "renovation-phares",
+  "vehicule": "",
+  "description": "",
+  "apres": "/src/assets/uploads/realisations/2026-11-16-phares-apres.webp",
+  "avant": "/src/assets/uploads/realisations/2026-11-16-phares-avant.webp",
+  "photos": [],
+  "miseEnAvant": true,
+  "date": "2026-11-16",
+  "publie": true
+}
