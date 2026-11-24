@@ -6,6 +6,14 @@
     <meta name="robots" content="noindex, nofollow" />
     <title>Administration — FlashUp</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <style>
+      /* Connexion uniquement par jeton d'accès GitHub : le bouton « Se connecter avec GitHub »
+         nécessite un service d'authentification (OAuth) que ce site n'utilise pas. On le masque. */
+      button[data-label^='Se connecter avec'][data-label*='GitHub'],
+      button[data-label^='Sign In with'][data-label*='GitHub'] {
+        display: none !important;
+      }
+    </style>
   </head>
   <body>
     <!-- Interface d'administration (Sveltia CMS). La configuration est dans config.yml. -->
